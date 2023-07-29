@@ -22,8 +22,23 @@ const formSchema = z.object({
     username: z.string().min(3, {
         message: "Username must be at least 2 characters.",
     }),
-    password: z.string().min(6, {
-        message: "password must be at least 6 characters.",
+    password: z.string().min(8, {
+        message: "password must be at least 8 characters.",
+    }).refine((value) => {
+        // Check for at least one uppercase letter
+        return /[A-Z]/.test(value);
+    }, {
+        message: 'Password must contain at least one capital letter.',
+    }).refine((value) => {
+        // Check for at least one lowercase letter
+        return /[a-z]/.test(value);
+    }, {
+        message: 'Password must contain at least one small letter.',
+    }).refine((value) => {
+        // Check for at least one special character
+        return /[!@#$%^&*()_+{}\[\]:;<>,.?~\-=/\\|]/.test(value);
+    }, {
+        message: 'Password must contain at least one special character.',
     }),
 })
 
@@ -55,7 +70,7 @@ export default function AuthForm() {
                             <FormItem>
 
                                 <div className="flex flex-col items-center ">
-                                    <button className="block rounded-full bg-white border-solid border-2 py-3 px-8  my-4" type="submit">
+                                    <button className="block rounded-full bg-white border-solid border-2 py-3 px-8  my-1" type="submit">
                                         <div className="flex justify center">
                                             <Image className="pr-2" src={'/icon/Google-Logo.png'} alt="Google Logo" width={30} height={30} />
                                             <div className="text-black">Sign in With Google</div>
