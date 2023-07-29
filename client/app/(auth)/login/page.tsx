@@ -54,42 +54,45 @@ export default function AuthForm() {
                         render={({ field }) => (
                             <FormItem>
 
+                                <div className="flex flex-col items-center ">
+                                    <button className="block rounded-full bg-white border-solid border-2 py-3 px-8  my-4" type="submit">
+                                        <div className="flex justify center">
+                                            <Image className="pr-2" src={'/icon/Google-Logo.png'} alt="Google Logo" width={30} height={30} />
+                                            <div className="text-black">Sign in With Google</div>
+                                        </div>
+                                    </button>
+                                    <button className="block rounded-full bg-white border-solid border-2 py-3 px-8  my-4" type="submit">
+                                        <div className="flex justify center">
+                                            <Image className="pr-2" src={'/icon/Github-Logo.png'} alt="Github Logo" width={30} height={30} />
+                                            <div className="text-black">Sign in With Github</div>
+                                        </div>
+                                    </button>
+                                    <Separator className="my-4"></Separator>
 
-                                <button className="block rounded-full bg-white border-solid border-2 py-3 px-8 ml-3 my-4" type="submit">
-                                    <div className="flex justify center">
-                                        <Image className="pr-2" src={'/icon/Google-Logo.png'} alt="Google Logo" width={30} height={30} />
-                                        <div className="text-black">Sign in With Google</div>
+                                    <FormControl>
+                                        <Input placeholder="Phone , Email or username" className="max-w-xs mb-6" {...field} />
+                                    </FormControl>
+                                    <FormControl>
+                                        <Input placeholder="password" className="max-w-xs" {...field} />
+                                    </FormControl>
+                                    <div className="my-[1rem]">
+                                        <Button className=" rounded-full text-white mt-4" type="submit"><div className="py-3 px-[6rem] text-lg">Login</div></Button>
                                     </div>
-                                </button>
-                                <button className="block rounded-full bg-white border-solid border-2 py-3 px-8 ml-3 my-4" type="submit">
-                                    <div className="flex justify center">
-                                        <Image className="pr-2" src={'/icon/Github-Logo.png'} alt="Github Logo" width={30} height={30} />
-                                        <div className="text-black">Sign in With Github</div>
-                                    </div>
-                                </button>
-                                <Separator className="mt-4" />
+                                    < Button type="submit" className=" bg-white border-solid border-2 rounded-full" > <div className="text-black">forgot password?</div></Button >
+                                    <div className="mt-4">Don't have an acount? <span className="text-blue-700">Singup</span></div>
+                                    <FormMessage />
 
-                                <FormControl>
-                                    <Input placeholder="Phone , Email or username" className="max-w-xs mb-6" {...field} />
-                                </FormControl>
-                                <FormControl>
-                                    <Input placeholder="password" className="max-w-xs" {...field} />
-                                </FormControl>
-                                <div className="mt-[2rem]">
-                                    <Button className=" rounded-full text-white mt-4" type="submit"><div className="py-3 px-[6rem] text-lg">Login</div></Button>
+
                                 </div>
-                                <FormMessage />
-
-
                             </FormItem>
 
                         )
                         }
                     />
-                    < Button className="ml-[4rem]" type="submit" > forgot password?</Button >
+
                 </form >
             </Form >
-        </div>
+        </div >
 
     )
 }
