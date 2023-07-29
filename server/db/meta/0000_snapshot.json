@@ -1,0 +1,37 @@
+{
+  "version": "5",
+  "dialect": "pg",
+  "id": "fdd6c607-a167-47a2-97e7-2d491a4937c9",
+  "prevId": "00000000-0000-0000-0000-000000000000",
+  "tables": {
+    "city": {
+      "name": "city",
+      "schema": "",
+      "columns": {
+        " id": {
+          "name": " id",
+          "type": "serial",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    }
+  },
+  "enums": {},
+  "schemas": {},
+  "_meta": {
+    "schemas": {},
+    "tables": {},
+    "columns": {}
+  }
+}
