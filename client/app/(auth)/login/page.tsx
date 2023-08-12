@@ -91,7 +91,7 @@ const ZodYouTubeForm = () => {
             <Button className="rounded-full bg-white text-black border-solid  border-2 px-8 ">
                 <div className="text-black">forgot password</div>
             </Button>
-            <div className="mt-4">Don't have an acount? <span className="text-blue-700">Singup</span></div>
+            <div className="mt-4">Don&apos;t have an acount? <span className="text-blue-700">Singup</span></div>
         </div>
         // devtool to visualize react hook form , control is a object destructured from useForm hook and these track the state without rerendering the whole conmpnent while if we have used state the whole componenet would have been re rendered
 

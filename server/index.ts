@@ -56,11 +56,15 @@ app.use(passport.initialize())
 app.use(passport.session())
 app.use('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
 app.get('/auth/callback',
-    passport.authenticate('google', { failureRedirect: '/auth/login' }), function (req: express.Request, res) {
+    passport.authenticate('google', { failureRedirect: 'http://localhost:3000/login' }), function (req: express.Request, res) {
         // Successful authentication, redirect or respond as needed
         const user = req.user as any;
+        const session = req.session;
+        console.log("session");
+        console.log(session);
+        console.log("user");
         console.log(user._json);
-        res.redirect('/home.register');
+        res.redirect('http://localhost:3000/');
     });
 
 // Available Routes

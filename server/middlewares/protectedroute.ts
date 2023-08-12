@@ -14,7 +14,6 @@ const IsUser = middleware(async (opts) => {
     // console.log(opts.ctx.res);
 
     if (!opts.ctx.req.isAuthenticated()) {
-        opts.ctx.res.redirect('/auth/login');
         throw new TRPCError({
             code: 'UNAUTHORIZED',
             message: 'You must be logged in to do this',

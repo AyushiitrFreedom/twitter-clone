@@ -1,5 +1,6 @@
 import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
+import { userNotFoundError } from '../utils/errors/usernotfound';
 
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 import { Strategy as JwtStrategy, ExtractJwt, JwtFromRequestFunction } from 'passport-jwt';
@@ -54,16 +55,7 @@ passport.use(new GoogleStrategy({
     async function (accessToken: string, refreshToken: string, profile: any, cb: any) {
 
         try {
-            // console.log(req);
-            // console.log("accessToken");
-            // console.log(accessToken);
-            // console.log("refreshToken");
-            // console.log(refreshToken);
-            // console.log(cb)
-            // console.log("profile");
-            // console.log(profile);
-            // console.log("accessToken");
-            // console.log(accessToken);
+
             const userData = {
 
                 name: profile._json.given_name,
@@ -72,13 +64,11 @@ passport.use(new GoogleStrategy({
                 authType: 'oauth'
             }
             const result: User[] = await db.select().from(user).where(eq(user.email, profile.email));
-            // console.log("result");
-            // console.log(result);
             if (result[0]) {
                 console.log("result");
                 return cb(null, result);
             } else {
-                return cb(null, profile)
+                return cb(null, false)
             }
         } catch (error) {
             return cb(error, null)
@@ -95,8 +85,8 @@ passport.serializeUser(function (user, done) {
 });
 
 //Fetches session details using session id
-passport.deserializeUser(async function (id: string, done) {
-    db.select().from(user).where(eq(user.id, id)).then((result) => {
+passport.deserializeUser(async function (email: string, done) {
+    db.select().from(user).where(eq(user.email, email)).then((result) => {
         done(null, result);
     }).catch((err) => {
         done(err, null);
