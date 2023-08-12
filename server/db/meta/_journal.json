@@ -15,6 +15,13 @@
       "when": 1690466949576,
       "tag": "0001_normal_pestilence",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1691566673456,
+      "tag": "0002_rich_shen",
+      "breakpoints": true
     }
   ]
 }

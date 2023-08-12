@@ -1,21 +1,14 @@
 import express from "express";
 import { db } from "../index";
-import { Cities, city, NewCity } from "../db/schema";
-import { t } from "../trpc";
+import { user } from "../db/schema/userSchema";
+import { publicProcedure, router } from "../trpc";
+import { authRouter } from './auth';
+import { homeRouter } from './home';
 
 
-export const appRouter = t.router({
-    show: t.procedure.query(async () => {
-        const cities: Cities[] = await db.select().from(city);
-        return cities;
-    }),
-    add: t.procedure.query(async () => {
-        const insertUser = async (t: NewCity) => {
-            return db.insert(city).values(t);
-        }
+export const appRouter = router({
 
-        const newcity: NewCity = { id: 1, name: "Alef" };
-        const result = await insertUser(newcity);
-        return result;
-    })
+    auth: authRouter,
+    home: homeRouter,
+
 })
