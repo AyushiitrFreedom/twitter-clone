@@ -83,10 +83,8 @@ export const authRouter = router({
     logout: publicProcedure.query(async (opts) => {
         opts.ctx.req.logout(function (err) {
             if (err) { return (err); }
-            opts.ctx.res.redirect('/auth.register');
         });
     }),
-
 
 })
 

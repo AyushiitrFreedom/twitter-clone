@@ -8,7 +8,11 @@ import passport from 'passport';
 // });
 
 const IsUser = middleware(async (opts) => {
-    console.log(opts.ctx.req);
+    // console.log("req");
+    // console.log(opts.ctx.req);
+    // console.log("res");
+    // console.log(opts.ctx.res);
+
     if (!opts.ctx.req.isAuthenticated()) {
         opts.ctx.res.redirect('/auth/login');
         throw new TRPCError({

@@ -13,7 +13,8 @@ import { userProcedure } from '../middlewares/protectedroute';
 
 export const homeRouter = router({
     register: userProcedure.query(async (opts) => {
-        return "you are in a protected route now"
+        console.log(opts.ctx.req.user);
+        console.log("protected route");
     })
 
 });

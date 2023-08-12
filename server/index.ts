@@ -54,10 +54,14 @@ app.use(session({
 
 app.use(passport.initialize())
 app.use(passport.session())
-app.use('/auth/google',
-    passport.authenticate('google', { scope: ['profile', 'email'] }));
+app.use('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
 app.get('/auth/callback',
-    passport.authenticate('google', { failureRedirect: '/auth/login', successRedirect: '/' }));
+    passport.authenticate('google', { failureRedirect: '/auth/login' }), function (req: express.Request, res) {
+        // Successful authentication, redirect or respond as needed
+        const user = req.user as any;
+        console.log(user._json);
+        res.redirect('/home.register');
+    });
 
 // Available Routes
 app.use("/", createExpressMiddleware({ router: appRouter, createContext }));
