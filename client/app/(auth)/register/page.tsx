@@ -24,7 +24,7 @@ const schema = z.object({
         .refine((value) => /\d/.test(value), 'Password must contain at least one number.')
 });
 
-const ZodYouTubeForm = () => {
+const ZodTwitterFormSignUp = () => {
     const form = useForm<FormValues>({
         defaultValues: { //in default values , you can also put here something from an api
             username: "",
@@ -63,25 +63,18 @@ const ZodYouTubeForm = () => {
         <div className="border-solid border-4 flex flex-col h-screen justify-center items-center">
 
             <Image src="/icon/Twitter-Logo.png" alt="twitter logo" width={100} height={100} />
-            <div className="my-8 text-4xl font-bold">Sign in To Twitter</div>
-            <Button className="rounded-full bg-white text-black border-solid  border-2 my-4"><div className="flex justify center">
-                <Image className="pr-2" src={'/icon/Google-Logo.png'} alt="Google Logo" width={30} height={30} />
-                <div className="text-black">Sign in With Google</div>
-            </div></Button>
-            <Button className="rounded-full bg-white text-black border-solid  border-2 "><div className="flex justify center">
-                <Image className="pr-2" src={'/icon/Github-Logo.png'} alt="Github Logo" width={30} height={30} />
-                <div className="text-black">Sign in With Github</div>
-            </div></Button>
+            <div className="my-8 text-4xl font-bold">Sign up To Twitter</div>
+
             <Separator className="w-[40vh] mt-6" />
 
             <form onSubmit={handleSubmit(onSubmit)} noValidate> {/* along with onSumbit , handle sumbit also has a function to handle errors which we get while sumbiting the form */}
                 <div className="flex flex-col items-center ">
-                    <div className="form-control ">
-                        <Input type="text" id="username" placeholder="username" className="my-4"{...register("username")} />
+                    <div className="form-control my-4">
+                        <Input type="text" id="username" placeholder="username" {...register("username")} />
                         <p className="text-red-600 text-sm">{errors.username?.message}</p>
                     </div>
-                    <div className="form-control ">
-                        <Input type="text" id="username" placeholder="email" className="my-4"{...register("email")} />
+                    <div className="form-control my-4">
+                        <Input type="text" id="username" placeholder="email" {...register("email")} />
                         <p className="text-red-600 text-sm">{errors.email?.message}</p>
                     </div>
                     <div className="form-control">
@@ -95,10 +88,7 @@ const ZodYouTubeForm = () => {
             </form>
 
             <DevTool control={control} />
-            <Button className="rounded-full bg-white text-black border-solid  border-2 px-8 ">
-                <div className="text-black">forgot password</div>
-            </Button>
-            <div className="mt-4">Don&apos;t have an acount? <span className="text-blue-700">Singup</span></div>
+
         </div>
         // devtool to visualize react hook form , control is a object destructured from useForm hook and these track the state without rerendering the whole conmpnent while if we have used state the whole componenet would have been re rendered
 
@@ -106,7 +96,7 @@ const ZodYouTubeForm = () => {
     );
 };
 
-export default ZodYouTubeForm;
+export default ZodTwitterFormSignUp;
 
 
 //React form hook notes 

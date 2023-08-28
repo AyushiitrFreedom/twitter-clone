@@ -68,15 +68,15 @@
   resolved "https://registry.npmjs.org/@oven/bun-linux-x64/-/bun-linux-x64-0.6.14.tgz"
   integrity sha512-nYvao1C0Nx5wO759cqFQmxDZo26wRfNsDHBhkcib/StTTjTaATvHQEMgSQpQLupbbuwE+aWFD6LY3GgeEqTrlQ==
 
-"@trpc/client@^10.35.0":
-  version "10.35.0"
-  resolved "https://registry.npmjs.org/@trpc/client/-/client-10.35.0.tgz"
-  integrity sha512-FyVNQGLLsNourpYq7bojvvvpM63woCPL9c+lJo9x1Yheop5fng2GEyiVcVjCmBNk5tVARHjG9bTG1UeNF5t8OQ==
+"@trpc/client@^10.37.1":
+  version "10.37.1"
+  resolved "https://registry.npmjs.org/@trpc/client/-/client-10.37.1.tgz"
+  integrity sha512-OSblNfeI0Z9ERn3usgLV2x63CwwPoNOHf1FQK85cOT7F8MNaWyEHoEv7tHUwNGJwyzKXmpU+ockZ0movzX3D0g==
 
-"@trpc/server@^10.35.0", "@trpc/server@10.35.0":
-  version "10.35.0"
-  resolved "https://registry.npmjs.org/@trpc/server/-/server-10.35.0.tgz"
-  integrity sha512-UntbE9gG+kB2nEwuJ0hw7AmQuRWw67voKaVBPBA7Ow6+aGZc00gva7015Ey5BT7Qf1wq7xJMLUdgw4QiVU+VpQ==
+"@trpc/server@^10.37.1", "@trpc/server@10.37.1":
+  version "10.37.1"
+  resolved "https://registry.npmjs.org/@trpc/server/-/server-10.37.1.tgz"
+  integrity sha512-r3VeA319/braYMBIzj+XLgLKQ9lJSVglvPvP9HUv4kr5w6Y5grQMxMcExhTiZWltE9bnSJHKtBBzHafOo7KC8A==
 
 "@tsconfig/node10@^1.0.7":
   version "1.0.9"
@@ -416,6 +416,13 @@ cookie@0.5.0:
   version "0.5.0"
   resolved "https://registry.npmjs.org/cookie/-/cookie-0.5.0.tgz"
   integrity sha512-YZ3GUyn/o8gfKJlnlX7g7xq4gyO6OSuhGPKaaGssGB2qgDUS0gPgtTvoyZLTt9Ab6dC4hfc9dV5arkvc/OCmrw==
+
+copy-anything@^3.0.2:
+  version "3.0.5"
+  resolved "https://registry.npmjs.org/copy-anything/-/copy-anything-3.0.5.tgz"
+  integrity sha512-yCEafptTtb4bk7GLEQoM8KVJpxAfdBJYaXyzQEgQQQgYrZiDp8SJmGKlYza6CYjEDNstAdNdKA3UuoULlEbS6w==
+  dependencies:
+    is-what "^4.1.8"
 
 cors@^2.8.5:
   version "2.8.5"
@@ -832,6 +839,11 @@ is-promise@^2.2.2:
   version "2.2.2"
   resolved "https://registry.npmjs.org/is-promise/-/is-promise-2.2.2.tgz"
   integrity sha512-+lP4/6lKUBfQjZ2pdxThZvLUAafmZb8OAxFb8XXtiQmS35INgr85hdOGoEs124ez1FCnZJt6jau/T+alh58QFQ==
+
+is-what@^4.1.8:
+  version "4.1.15"
+  resolved "https://registry.npmjs.org/is-what/-/is-what-4.1.15.tgz"
+  integrity sha512-uKua1wfy3Yt+YqsD6mTUEa2zSi3G1oPlqTflgaPJ7z63vUGN5pxFpnQfeSLMFnJDEsdvOtkp1rUWkYjB4YfhgA==
 
 json-diff@0.9.0:
   version "0.9.0"
@@ -1352,6 +1364,13 @@ statuses@2.0.1:
   version "2.0.1"
   resolved "https://registry.npmjs.org/statuses/-/statuses-2.0.1.tgz"
   integrity sha512-RwNA9Z/7PrK06rYLIzFMlaF+l73iwpzsqRIFgbMLbTcLD6cOao82TaWefPXQvB2fOC4AjuYSEndS7N/mTCbkdQ==
+
+superjson@^1.13.1:
+  version "1.13.1"
+  resolved "https://registry.npmjs.org/superjson/-/superjson-1.13.1.tgz"
+  integrity sha512-AVH2eknm9DEd3qvxM4Sq+LTCkSXE2ssfh1t11MHMXyYXFQyQ1HLgVvV+guLTsaQnJU3gnaVo34TohHPulY/wLg==
+  dependencies:
+    copy-anything "^3.0.2"
 
 timers-ext@^0.1.7:
   version "0.1.7"

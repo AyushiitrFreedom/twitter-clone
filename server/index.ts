@@ -10,7 +10,6 @@ import { createExpressMiddleware } from '@trpc/server/adapters/express';
 import { appRouter } from './routes/index';
 
 import pkg from 'pg';
-import { a } from "drizzle-orm/column.d-aa4e525d";
 import { createContext } from "./context";
 import session from "express-session";
 const { Client } = pkg;
@@ -33,14 +32,23 @@ const client = new Client({
     database: "twitterX",
 });
 
+const connectdb = async () => {
 
-await client.connect();
+    await client.connect();
+}
+connectdb();
 export const db = drizzle(client);
 // await migrate({ client }, './db');trpc
 
 
 const app = express();
-app.use(cors())
+// app.use(function (req, res, next) {
+//     res.header("Access-Control-Allow-Origin", "http://localhost:3000");
+//     res.header("Access-Control-Allow-Methods", "*");
+//     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+//     next();
+// });
+app.use(cors({ origin: "http://localhost:3000", methods: ['GET', 'POST'], credentials: true }));
 // undefined
 app.use(express.json());
 dotenv.config();
@@ -68,11 +76,10 @@ app.get('/auth/callback',
     });
 
 // Available Routes
-app.use("/", createExpressMiddleware({ router: appRouter, createContext }));
+app.use("/", createExpressMiddleware({ router: appRouter, createContext: createContext }));
 // app.use("/api/notes", require("./routes/notes"));
 
 app.listen(process.env.EXPRESS_PORT, () => {
     console.log(`Example app listening on port ${process.env.EXPRESS_PORT}`);
 });
 
-export type AppRouter = typeof appRouter;
