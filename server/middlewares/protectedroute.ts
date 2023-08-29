@@ -3,7 +3,7 @@ import { middleware, publicProcedure } from '../trpc';
 import passport from 'passport';
 import { get } from 'http';
 import jsonwebtoken, { JwtPayload, Secret } from 'jsonwebtoken';
-import { User, user } from '../db/schema/userSchema';
+import { User, user } from '../db/schema/Schema';
 import { db } from '..';
 import { eq } from 'drizzle-orm';
 
@@ -30,7 +30,7 @@ const IsUser = middleware(async (opts) => {
             }
 
         } catch (error) {
-
+            console.log('le tu bhi le ye error' + error)
         }
     }
 

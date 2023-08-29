@@ -64,7 +64,7 @@ app.use(passport.initialize())
 app.use(passport.session())
 app.use('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
 app.get('/auth/callback',
-    passport.authenticate('google', { failureRedirect: 'http://localhost:3000/login' }), function (req: express.Request, res) {
+    passport.authenticate('google', { failureRedirect: 'http://localhost:3000/register' }), function (req: express.Request, res) {
         // Successful authentication, redirect or respond as needed
         const user = req.user as any;
         const session = req.session;

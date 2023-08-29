@@ -53,7 +53,9 @@ const ZodYouTubeForm = () => {
     const { errors, isDirty, isValid } = formState; // there are also other values we can destructure like isSumbiting , isSumbited , isSumbitSuccessfull , sumbitcount
 
     //  you can also reset the form with reset funciton , ---> useeffect ke andr , if isSumbitsuccessfull then reset , and watch for [insumbitsuccessfull]
-
+    const GoogleSignIn = () => {
+        window.location.href = 'http://localhost:5000/auth/google'
+    }
     const onSubmit = (data: FormValues) => {
 
         console.log(data);
@@ -85,7 +87,7 @@ const ZodYouTubeForm = () => {
 
             <Image src="/icon/Twitter-Logo.png" alt="twitter logo" width={100} height={100} />
             <div className="my-8 text-4xl font-bold">Sign in To Amazon</div>
-            <Button className="rounded-full bg-white text-black border-solid  border-2 my-4"><div className="flex justify center">
+            <Button className="rounded-full bg-white text-black border-solid  border-2 my-4" onClick={GoogleSignIn}><div className="flex justify center">
                 <Image className="pr-2" src={'/icon/Google-Logo.png'} alt="Google Logo" width={30} height={30} />
                 <div className="text-black">Sign in With Google</div>
             </div></Button>

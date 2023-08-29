@@ -1,5 +1,5 @@
 import { Console, error } from 'console';
-import { user, User, InsertUser } from '../db/schema/userSchema';
+import { user, User, InsertUser } from '../db/schema/Schema';
 import { db } from "../index";
 import bcryptjs from 'bcryptjs'
 import { publicProcedure, router } from "../trpc";
