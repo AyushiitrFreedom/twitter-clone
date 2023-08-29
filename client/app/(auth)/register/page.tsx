@@ -1,4 +1,6 @@
 "use client"
+
+import { trpc } from "@/utils/trpc";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { isDirty, isValid, z } from "zod";
@@ -7,31 +9,33 @@ import { Button } from "@/components/ui/button";
 import Image from 'next/image';
 import { Separator } from "@/components/ui/separator";
 import { DevTool } from "@hookform/devtools";
+import { useRouter } from 'next/navigation'
+import { useToast } from "@/components/ui/use-toast"
+import RegisterSchema from "@/utils/zod-schemas/RegisterSchema";
+import { ToastAction } from "@/components/ui/toast";
+import { Timer } from "lucide-react";
 
-type FormValues = {
+export type FormValues = {
     username: string;
     password: string;
     email: string;
 };
 
-const schema = z.object({
-    username: z.string().nonempty("Username is required"),
-    email: z.string().email("Invalid email address"),
-    password: z.string().min(8, 'Password must be at least 8 characters.')
-        .refine((value) => /[A-Z]/.test(value), 'Password must contain at least one capital letter.')
-        .refine((value) => /[a-z]/.test(value), 'Password must contain at least one small letter.')
-        .refine((value) => /[!@#$%^&*()_+{}\[\]:;<>,.?~\-=/\\|]/.test(value), 'Password must contain at least one special character.')
-        .refine((value) => /\d/.test(value), 'Password must contain at least one number.')
-});
+
 
 const ZodTwitterFormSignUp = () => {
+    const { toast } = useToast()
+    const router = useRouter();
+    let mutation = trpc.auth.register.useMutation();
+
+
     const form = useForm<FormValues>({
         defaultValues: { //in default values , you can also put here something from an api
             username: "",
             email: "",
             password: '',
         },
-        resolver: zodResolver(schema),
+        resolver: zodResolver(RegisterSchema),
         mode: "onTouched" // this causes validaiton when u type , there are option to choose 
         //you can also do async validaiton
     });
@@ -50,8 +54,31 @@ const ZodTwitterFormSignUp = () => {
 
     //  you can also reset the form with reset funciton , ---> useeffect ke andr , if isSumbitsuccessfull then reset , and watch for [insumbitsuccessfull]
 
-    const onSubmit = (data: FormValues) => {
-        console.log(data);
+    const onSubmit = async (data: FormValues) => {
+
+        mutation.mutate(data);
+        // console.log(data);
+        // console.log("this is" + mutation.data);
+        if (mutation.error?.message == "user allready exist") {
+            console.log("yes")
+            toast({
+                variant: "destructive",
+                title: mutation.error?.message,
+            })
+            router.push('/login')
+
+
+        }
+        if (mutation.error?.message == "Server Error") {
+            toast({
+                variant: "destructive",
+                title: mutation.error?.message,
+            })
+        }
+        if (mutation.isSuccess) {
+            router.push('/')
+        }
+
 
         //you can console log this to see what is the structure of the data being recieved from the form
         //also suppose the api accept the data in some other form or structure then also you can modify data here before sending it to the api with nested objects you can group some properties checkout video 13 , insted of nested objects you can also use arrays to group some properties video 14
@@ -63,8 +90,12 @@ const ZodTwitterFormSignUp = () => {
         <div className="border-solid border-4 flex flex-col h-screen justify-center items-center">
 
             <Image src="/icon/Twitter-Logo.png" alt="twitter logo" width={100} height={100} />
-            <div className="my-8 text-4xl font-bold">Sign up To Twitter</div>
+            <div className="my-8 text-4xl font-bold">Sign up To Amazon</div>
 
+            {/* <Button className="rounded-full bg-white text-black border-solid  border-2 my-4"><div className="flex justify center">
+                <Image className="pr-2" src={'/icon/Google-Logo.png'} alt="Google Logo" width={30} height={30} />
+                <div className="text-black">Sign in With Google</div>
+            </div></Button> */}
             <Separator className="w-[40vh] mt-6" />
 
             <form onSubmit={handleSubmit(onSubmit)} noValidate> {/* along with onSumbit , handle sumbit also has a function to handle errors which we get while sumbiting the form */}

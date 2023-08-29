@@ -15,7 +15,8 @@
     "types": [
       "node"
     ],
-    "outDir": "dist"
+    "outDir": "dist",
+    "useUnknownInCatchVariables": false
   },
   "ts-node": {
     "esm": true,

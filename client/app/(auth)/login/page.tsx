@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import Image from 'next/image';
 import { Separator } from "@/components/ui/separator";
 import { DevTool } from "@hookform/devtools";
+import { useToast } from "@/components/ui/use-toast"
 
 type FormValues = {
     username: string;
@@ -51,6 +52,7 @@ const ZodYouTubeForm = () => {
     //  you can also reset the form with reset funciton , ---> useeffect ke andr , if isSumbitsuccessfull then reset , and watch for [insumbitsuccessfull]
 
     const onSubmit = (data: FormValues) => {
+
         console.log(data);
 
         //you can console log this to see what is the structure of the data being recieved from the form
@@ -63,14 +65,10 @@ const ZodYouTubeForm = () => {
         <div className="border-solid border-4 flex flex-col h-screen justify-center items-center">
 
             <Image src="/icon/Twitter-Logo.png" alt="twitter logo" width={100} height={100} />
-            <div className="my-8 text-4xl font-bold">Sign in To Twitter</div>
+            <div className="my-8 text-4xl font-bold">Sign in To Amazon</div>
             <Button className="rounded-full bg-white text-black border-solid  border-2 my-4"><div className="flex justify center">
                 <Image className="pr-2" src={'/icon/Google-Logo.png'} alt="Google Logo" width={30} height={30} />
                 <div className="text-black">Sign in With Google</div>
-            </div></Button>
-            <Button className="rounded-full bg-white text-black border-solid  border-2 "><div className="flex justify center">
-                <Image className="pr-2" src={'/icon/Github-Logo.png'} alt="Github Logo" width={30} height={30} />
-                <div className="text-black">Sign in With Github</div>
             </div></Button>
             <Separator className="w-[40vh] mt-6" />
 

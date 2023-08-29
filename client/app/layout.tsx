@@ -1,7 +1,7 @@
 import './globals.css'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
-
+import { Toaster } from "@/components/ui/toaster"
 const inter = Inter({ subsets: ['latin'] })
 import { TrpcProvider } from "@/utils/trpc-provider";
 
@@ -20,6 +20,7 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <TrpcProvider>{children}</TrpcProvider>
+        <Toaster />
       </body>
     </html>
   );

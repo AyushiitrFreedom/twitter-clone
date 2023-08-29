@@ -13,7 +13,7 @@ export default function Page() {
     // console.log(data, isLoading, isFetching)
     return (
         <>
-            <h1>he is {name?.status} is my best friend</h1>
+            <h1>he is  is my best friend</h1>
         </>
     )
 }

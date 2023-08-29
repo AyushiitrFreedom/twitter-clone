@@ -8,19 +8,39 @@ import jwtMaker from "../utils/func/jwtMaker";
 import { v4 as uuidv4 } from 'uuid';
 import { eq } from 'drizzle-orm';
 import passport from 'passport';
+import { string, z } from 'zod';
+import { TRPCClientError } from '@trpc/client';
+import CustomError from '../utils/errors/customerror';
+import RegisterSchema from "../../client/utils/zod-schemas/RegisterSchema";
 
 
 export const authRouter = router({
-    register: publicProcedure.query(async (opts) => {
-
+    register: publicProcedure.input(
+        z.object({
+            username: z.string().nonempty("Username is required"),
+            email: z.string().email("Invalid email address"),
+            password: z.string().min(8, 'Password must be at least 8 characters.')
+                .refine((value: string) => /[A-Z]/.test(value), 'Password must contain at least one capital letter.')
+                .refine((value: string) => /[a-z]/.test(value), 'Password must contain at least one small letter.')
+                .refine((value: string) => /[!@#$%^&*()_+{}\[\]:;<>,.?~\-=/\\|]/.test(value), 'Password must contain at least one special character.')
+                .refine((value: string) => /\d/.test(value), 'Password must contain at least one number.')
+        })
+    ).mutation(async (opts) => {
+        //checking for existing user
+        const existingUser = await db.select().from(user).where(eq(user.email, opts.input.email));
+        console.log(existingUser)
+        if (existingUser[0]) {
+            console.log("yes")
+            throw new TRPCClientError("user allready exist")
+        }
         const newUser = async (t: InsertUser) => {
             return db.insert(user).values(t);
         }
         console.log(opts);
 
-        const userPassword = await GeneratePassword(opts.ctx.req.body.password);
+        const userPassword = await GeneratePassword(opts.input.password);
 
-        const newuser: InsertUser = { username: opts.ctx.req.body.username, email: opts.ctx.req.body.email, password: userPassword, id: uuidv4() };
+        const newuser: InsertUser = { username: opts.input.username, email: opts.input.email, password: userPassword, id: uuidv4() };
         const result = await newUser(newuser);
         console.log(result);
         const token = jwtMaker({ id: newuser.id });
@@ -31,19 +51,19 @@ export const authRouter = router({
             };
         }
         else {
-            return {
-                status: "error",
-                message: "error while making the user",
-            };
+            throw new TRPCClientError("Server Error")
         }
 
     }),
-    login: publicProcedure.query(async (opts) => {
+    login: publicProcedure.input(z.object({
+        email: z.string().email(),
+        password: z.string().min(8),
+    })).query(async (opts) => {
         try {
-            const { id, username, password } = opts.ctx.req.body;
+            const { email, password } = opts.input;
 
             // Check if user with the given username exists
-            const existingUser = await db.select().from(user).where(eq(user.id, id));
+            const existingUser = await db.select().from(user).where(eq(user.email, email));
             if (!existingUser) {
                 return {
                     status: "error",
@@ -77,8 +97,9 @@ export const authRouter = router({
 
     }),
     test: publicProcedure.query(async (opts) => {
-        const result: User[] = await db.select().from(user).where(eq(user.email, "KJHIGF"));
+        const result: User[] = await db.select().from(user).where(eq(user.email, "ayush_g@ar.iitr.ac.in"));
         console.log(!result[0]);
+        return result
     }),
     logout: publicProcedure.query(async (opts) => {
         opts.ctx.req.logout(function (err) {
