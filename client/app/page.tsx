@@ -1,5 +1,5 @@
+"use client";
 import { Button } from "@/components/ui/button";
-
 export default function Page() {
-  return <Button>Button</Button>
+  return <Button onClick={() => localStorage.removeItem('token')}>Button</Button>
 }

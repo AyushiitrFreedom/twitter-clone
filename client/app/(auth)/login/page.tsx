@@ -7,7 +7,9 @@ import { Button } from "@/components/ui/button";
 import Image from 'next/image';
 import { Separator } from "@/components/ui/separator";
 import { DevTool } from "@hookform/devtools";
-import { useToast } from "@/components/ui/use-toast"
+import { toast, useToast } from "@/components/ui/use-toast"
+import { trpc } from "@/utils/trpc";
+import { useRouter } from 'next/navigation'
 
 type FormValues = {
     username: string;
@@ -16,7 +18,6 @@ type FormValues = {
 };
 
 const schema = z.object({
-    username: z.string().nonempty("Username is required"),
     email: z.string().email("Invalid email address"),
     password: z.string().min(8, 'Password must be at least 8 characters.')
         .refine((value) => /[A-Z]/.test(value), 'Password must contain at least one capital letter.')
@@ -26,9 +27,11 @@ const schema = z.object({
 });
 
 const ZodYouTubeForm = () => {
+    let mutation = trpc.auth.login.useMutation();
+    const { toast } = useToast()
+    const router = useRouter();
     const form = useForm<FormValues>({
         defaultValues: { //in default values , you can also put here something from an api
-            username: "",
             email: "",
             password: '',
         },
@@ -54,12 +57,28 @@ const ZodYouTubeForm = () => {
     const onSubmit = (data: FormValues) => {
 
         console.log(data);
+        mutation.mutate(data);
 
-        //you can console log this to see what is the structure of the data being recieved from the form
-        //also suppose the api accept the data in some other form or structure then also you can modify data here before sending it to the api with nested objects you can group some properties checkout video 13 , insted of nested objects you can also use arrays to group some properties video 14
+        if (mutation.isError) {
+            toast({
+                variant: "destructive",
+                title: mutation.error?.message,
+            })
+        }
+        if (mutation.isSuccess) {
+            console.log(mutation.data)
+            localStorage.setItem('token', mutation.data?.token)
+            router.push('/')
 
-        //sometimes you do not how many feilds in array are required , for example in a website we have an option to add as many phone numbers as the user wants by clicking a plus sign for thisw watch video 15
-    };
+        }
+
+    }
+
+    //you can console log this to see what is the structure of the data being recieved from the form
+    //also suppose the api accept the data in some other form or structure then also you can modify data here before sending it to the api with nested objects you can group some properties checkout video 13 , insted of nested objects you can also use arrays to group some properties video 14
+
+    //sometimes you do not how many feilds in array are required , for example in a website we have an option to add as many phone numbers as the user wants by clicking a plus sign for thisw watch video 15
+
     // you can also disable some feilds , for example disable = "true" or disable = watch("username")==="" ---> in this code if the username is empty then the password feild will be disabled
     return (
         <div className="border-solid border-4 flex flex-col h-screen justify-center items-center">
@@ -74,12 +93,9 @@ const ZodYouTubeForm = () => {
 
             <form onSubmit={handleSubmit(onSubmit)} noValidate> {/* along with onSumbit , handle sumbit also has a function to handle errors which we get while sumbiting the form */}
                 <div className="flex flex-col items-center ">
+
                     <div className="form-control ">
-                        <Input type="text" id="username" placeholder="username" className="my-4"{...register("username")} />
-                        <p className="text-red-600 text-sm">{errors.username?.message}</p>
-                    </div>
-                    <div className="form-control ">
-                        <Input type="text" id="username" placeholder="email" className="my-4"{...register("email")} />
+                        <Input type="text" id="email" placeholder="email" className="my-4"{...register("email")} />
                         <p className="text-red-600 text-sm">{errors.email?.message}</p>
                     </div>
                     <div className="form-control">

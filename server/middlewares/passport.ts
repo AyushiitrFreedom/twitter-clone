@@ -1,49 +1,14 @@
 import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
-import { userNotFoundError } from '../utils/errors/usernotfound';
 
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
-import { Strategy as JwtStrategy, ExtractJwt, JwtFromRequestFunction } from 'passport-jwt';
 import passport from 'passport';
 import { user, User, InsertUser } from '../db/schema/userSchema';
 import { db } from "../index";
 import { eq } from 'drizzle-orm';
-interface JwtOptions {
-    jwtFromRequest: JwtFromRequestFunction;
-    secretOrKey: string;
-}
 
-const opts: JwtOptions = {
-    jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-    secretOrKey: process.env.JWT_SECRET ?? "secret",
-};
 
-passport.use(new JwtStrategy(opts, async function (jwt_payload, done) {
-    // UserModel.findOne({ id: jwt_payload.id }, function (err, user) {
-    //     if (err) {
-    //         return done(err, false);
-    //     }
-    //     if (user) {
-    //         return done(null, user);
-    //     } else {
-    //         return done(null, false);
-    //         // or you could create a new account
-    //     }
-    // });
 
-    try {
-        const result: User[] = await db.select().from(user).where(eq(user.id, jwt_payload.id));
-        if (result) {
-            return done(null, result);
-        }
-        else   // if no user is found
-            return done(null, false);
-
-    } catch (error) {
-        return done(error, false);
-    }
-
-}));
 
 
 

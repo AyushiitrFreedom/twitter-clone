@@ -30,7 +30,6 @@ export const authRouter = router({
         const existingUser = await db.select().from(user).where(eq(user.email, opts.input.email));
         console.log(existingUser)
         if (existingUser[0]) {
-            console.log("yes")
             throw new TRPCClientError("user allready exist")
         }
         const newUser = async (t: InsertUser) => {
@@ -56,43 +55,42 @@ export const authRouter = router({
 
     }),
     login: publicProcedure.input(z.object({
-        email: z.string().email(),
-        password: z.string().min(8),
-    })).query(async (opts) => {
+        email: z.string().email("Invalid email address"),
+        password: z.string().min(8, 'Password must be at least 8 characters.')
+            .refine((value) => /[A-Z]/.test(value), 'Password must contain at least one capital letter.')
+            .refine((value) => /[a-z]/.test(value), 'Password must contain at least one small letter.')
+            .refine((value) => /[!@#$%^&*()_+{}\[\]:;<>,.?~\-=/\\|]/.test(value), 'Password must contain at least one special character.')
+            .refine((value) => /\d/.test(value), 'Password must contain at least one number.')
+    })).mutation(async (opts) => {
         try {
             const { email, password } = opts.input;
 
             // Check if user with the given username exists
             const existingUser = await db.select().from(user).where(eq(user.email, email));
             if (!existingUser) {
-                return {
-                    status: "error",
-                    message: "User not found",
-                };
+                throw new TRPCClientError("User not found")
             }
 
             // Compare the provided password with the stored hash
             const passwordMatch = await bcryptjs.compare(password, existingUser[0].password);
 
             if (!passwordMatch) {
-                return {
-                    status: "error",
-                    message: "Invalid password",
-                };
+                throw new TRPCClientError("Invalid password")
             }
 
             // Generate and send JWT token
             const token = jwtMaker({ id: existingUser[0].id });
             return {
                 status: "success",
-                token: "Bearer " + token,
+                token: "Bearer" + token,
             };
 
         } catch (error) {
-            return {
-                status: "error",
-                message: "An error occurred during login",
-            };
+            let errorMessage = "Failed to do something exceptional";
+            if (error instanceof Error) {
+                errorMessage = error.message;
+            }
+            throw new TRPCClientError("server error")
         }
 
     }),

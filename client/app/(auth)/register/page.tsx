@@ -76,7 +76,10 @@ const ZodTwitterFormSignUp = () => {
             })
         }
         if (mutation.isSuccess) {
+            console.log(mutation.data)
+            localStorage.setItem('token', mutation.data?.token)
             router.push('/')
+
         }
 
 

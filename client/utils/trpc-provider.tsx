@@ -36,6 +36,9 @@ export const TrpcProvider: React.FC<{ children: React.ReactNode }> = ({
                             credentials: "include",
                         });
                     },
+                    headers: {
+                        Authorization: `${typeof window !== "undefined" ? localStorage.getItem('token') : undefined}`
+                    }
                 }),
             ],
             transformer: superjson,
