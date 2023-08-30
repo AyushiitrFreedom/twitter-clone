@@ -20,8 +20,6 @@ export default function Page() {
     }, [isError, error, toast, router]);
     if (isLoading || isFetching) {
         return <Spinner />
-
-
     }
 
     // console.log(data, isLoading, isFetching)

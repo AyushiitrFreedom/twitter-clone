@@ -46,4 +46,36 @@ export const productRouter = router({
 
 
     }),
+    get: userProcedure.input(z.object({
+        id: z.string().nonempty("id is required")
+    })).query(async (opts) => {
+        try {
+            const products = await db.select().from(product).where(eq(product.product_id, opts.input.id));
+            if (!products[0]) {
+                throw new TRPCClientError("product not found")
+            }
+            return products[0];
+        } catch (error) {
+            let errorMessage = "Failed to do something exceptional";
+            if (error instanceof Error) {
+                errorMessage = error.message;
+            }
+            throw new TRPCClientError(errorMessage)
+        }
+    }),
+    getall: userProcedure.query(async (opts) => {
+        try {
+            const products = await db.select().from(product);
+            if (!products[0]) {
+                throw new TRPCClientError("No Products Found")
+            }
+            return products;
+        } catch (error) {
+            let errorMessage = "Failed to do something exceptional";
+            if (error instanceof Error) {
+                errorMessage = error.message;
+            }
+            throw new TRPCClientError(errorMessage)
+        }
+    }),
 });

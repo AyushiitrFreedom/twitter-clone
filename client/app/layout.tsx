@@ -18,10 +18,15 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        <script src="https://kit.fontawesome.com/f0c2f16b90.js" crossOrigin="anonymous"></script>
+
+      </head>
       <body>
         <TrpcProvider>{children}</TrpcProvider>
         <Toaster />
       </body>
+
     </html>
   );
 }

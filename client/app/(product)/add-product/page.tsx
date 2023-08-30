@@ -15,6 +15,7 @@ import RegisterSchema from "@/utils/zod-schemas/RegisterSchema";
 import { ToastAction } from "@/components/ui/toast";
 import { Timer } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox"
+import { Mutation } from "@tanstack/react-query";
 
 
 
@@ -30,7 +31,25 @@ export type FormValues = {
 const AddProductForm = () => {
     const { toast } = useToast()
     const router = useRouter();
-    let mutation = trpc.product.add.useMutation();
+    let mutation = trpc.product.add.useMutation({
+        onSuccess: () => {
+            toast({
+                variant: "success",
+                title: "Product Added",
+            });
+            reset();
+        },
+        onError: (error) => {
+            toast({
+                variant: "destructive",
+                title: error.message,
+            });
+            if (error.message === "You are not a seller") {
+                router.push("/");
+            }
+        }
+    })
+        ;
 
 
     const form = useForm<FormValues>({
@@ -64,34 +83,13 @@ const AddProductForm = () => {
 
     //  you can also reset the form with reset funciton , ---> useeffect ke andr , if isSumbitsuccessfull then reset , and watch for [insumbitsuccessfull]
 
-    const onSubmit = async (data: FormValues) => {
-        console.log(data)
+    const onSubmit = async (data: FormValues,) => {
+
+
         mutation.mutate(data);
-        // console.log(data);
-        // console.log("this is" + mutation.data);
-        if (mutation.error?.message == "You are not a seller") {
-            toast({
-                variant: "destructive",
-                title: mutation.error?.message,
-            })
-            router.push('/')
 
 
 
-        }
-        if (mutation.error?.message == "Server Error") {
-            toast({
-                variant: "destructive",
-                title: mutation.error?.message,
-            })
-        }
-        if (mutation.isSuccess) {
-            toast({
-                variant: "success",
-                title: "Product Added",
-            })
-            reset()
-        }
 
 
         //you can console log this to see what is the structure of the data being recieved from the form
