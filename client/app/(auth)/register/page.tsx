@@ -29,7 +29,32 @@ export type FormValues = {
 const ZodTwitterFormSignUp = () => {
     const { toast } = useToast()
     const router = useRouter();
-    let mutation = trpc.auth.register.useMutation();
+    let mutation = trpc.auth.register.useMutation({
+        onSuccess: () => {
+            toast({
+                variant: "success",
+                title: "Success",
+            });
+
+            localStorage.setItem('token', mutation.data ? mutation.data.token : '')
+            router.push('/')
+        },
+        onError: (error) => {
+            toast({
+                variant: "destructive",
+                title: mutation.error?.message,
+            })
+            if (mutation.error?.message == "user allready exist") {
+
+                router.push('/login')
+
+
+            }
+
+        }
+
+    },
+    );
 
 
     const form = useForm<FormValues>({
@@ -59,16 +84,12 @@ const ZodTwitterFormSignUp = () => {
     //  you can also reset the form with reset funciton , ---> useeffect ke andr , if isSumbitsuccessfull then reset , and watch for [insumbitsuccessfull]
 
     const onSubmit = async (data: FormValues) => {
-        console.log(data)
         mutation.mutate(data);
         // console.log(mutation.error?.message);
         // console.log("this is" + mutation.data);
         if (mutation.error?.message == "user allready exist") {
             console.log("yes")
-            toast({
-                variant: "destructive",
-                title: mutation.error?.message,
-            })
+
             router.push('/login')
 
 

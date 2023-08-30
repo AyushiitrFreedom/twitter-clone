@@ -27,7 +27,28 @@ const schema = z.object({
 });
 
 const ZodYouTubeForm = () => {
-    let mutation = trpc.auth.login.useMutation();
+    let mutation = trpc.auth.login.useMutation({
+        onSuccess: () => {
+            toast({
+                variant: "success",
+                title: "Success",
+            });
+
+            localStorage.setItem('token', mutation.data ? mutation.data.token : '')
+            router.push('/')
+        },
+        onError: (error) => {
+            toast({
+                variant: "destructive",
+                title: mutation.error?.message,
+            })
+
+
+        }
+
+    }
+
+        ,);
     const { toast } = useToast()
     const router = useRouter();
     const form = useForm<FormValues>({
@@ -58,21 +79,7 @@ const ZodYouTubeForm = () => {
     }
     const onSubmit = (data: FormValues) => {
 
-        console.log(data);
         mutation.mutate(data);
-
-        if (mutation.isError) {
-            toast({
-                variant: "destructive",
-                title: mutation.error?.message,
-            })
-        }
-        if (mutation.isSuccess) {
-            console.log(mutation.data)
-            localStorage.setItem('token', mutation.data?.token)
-            router.push('/')
-
-        }
 
     }
 
