@@ -87,7 +87,7 @@ const AddProductForm = () => {
         }
         if (mutation.isSuccess) {
             toast({
-                variant: "default",
+                variant: "success",
                 title: "Product Added",
             })
             reset()

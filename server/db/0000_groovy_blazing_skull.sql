@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS "order" (
 	"is_bought" boolean
 );
 --> statement-breakpoint
-CREATE TABLE IF NOT EXISTS "product" (
+CREATE TABLE IF NOT EXISTS "products" (
 	"product_id" text PRIMARY KEY NOT NULL,
 	"name" text,
 	"description" text,
@@ -42,7 +42,7 @@ EXCEPTION
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "order" ADD CONSTRAINT "order_product_id_product_product_id_fk" FOREIGN KEY ("product_id") REFERENCES "product"("product_id") ON DELETE no action ON UPDATE no action;
+ ALTER TABLE "order" ADD CONSTRAINT "order_product_id_products_product_id_fk" FOREIGN KEY ("product_id") REFERENCES "products"("product_id") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
@@ -54,7 +54,7 @@ EXCEPTION
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "product" ADD CONSTRAINT "product_seller_id_buyers_id_fk" FOREIGN KEY ("seller_id") REFERENCES "buyers"("id") ON DELETE no action ON UPDATE no action;
+ ALTER TABLE "products" ADD CONSTRAINT "products_seller_id_buyers_id_fk" FOREIGN KEY ("seller_id") REFERENCES "buyers"("id") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;

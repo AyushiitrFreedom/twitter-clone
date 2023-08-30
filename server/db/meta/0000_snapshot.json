@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "pg",
-  "id": "a8d27f47-6789-4e53-8d65-fd94e91953d2",
+  "id": "bce44e0a-5c73-403c-8b61-e4d600556c64",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "message": {
@@ -96,10 +96,10 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "order_product_id_product_product_id_fk": {
-          "name": "order_product_id_product_product_id_fk",
+        "order_product_id_products_product_id_fk": {
+          "name": "order_product_id_products_product_id_fk",
           "tableFrom": "order",
-          "tableTo": "product",
+          "tableTo": "products",
           "columnsFrom": [
             "product_id"
           ],
@@ -126,8 +126,8 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "product": {
-      "name": "product",
+    "products": {
+      "name": "products",
       "schema": "",
       "columns": {
         "product_id": {
@@ -169,9 +169,9 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "product_seller_id_buyers_id_fk": {
-          "name": "product_seller_id_buyers_id_fk",
-          "tableFrom": "product",
+        "products_seller_id_buyers_id_fk": {
+          "name": "products_seller_id_buyers_id_fk",
+          "tableFrom": "products",
           "tableTo": "buyers",
           "columnsFrom": [
             "seller_id"

@@ -1,7 +1,4 @@
-import { pgTable, text, uuid, serial, integer, boolean } from 'drizzle-orm/pg-core';
-import { InferModel } from 'drizzle-orm';
-
-
+import { pgTable, text, integer, boolean } from 'drizzle-orm/pg-core';
 export const user = pgTable('buyers', {
     id: text('id').primaryKey().notNull(),
     email: text('email').notNull(),
@@ -9,7 +6,6 @@ export const user = pgTable('buyers', {
     password: text('password').notNull(),
     isSeller: boolean('isSeller').default(true).notNull(),
 });
-
 // Products Table
 export const product = pgTable('products', {
     product_id: text('product_id').primaryKey(),
@@ -19,7 +15,6 @@ export const product = pgTable('products', {
     seller_id: text('seller_id').notNull().references(() => user.id),
     imageUrl: text('imageUrl')
 });
-
 // Orders Table
 export const order = pgTable('order', {
     order_id: text('order_id').primaryKey(),
@@ -27,7 +22,6 @@ export const order = pgTable('order', {
     buyer_id: text('buyer_id').references(() => user.id),
     is_bought: boolean('is_bought'),
 });
-
 // Messages Table
 export const message = pgTable('message', {
     message_id: text('message_id').primaryKey(),
@@ -35,17 +29,4 @@ export const message = pgTable('message', {
     recipient_id: text('recipient_id').references(() => user.id),
     message: text('message'),
 });
-
-
-
-export type User = InferModel<typeof user>;
-export type InsertUser = InferModel<typeof user, "insert">;
-
-export type Product = InferModel<typeof product>;
-export type InsertProduct = InferModel<typeof product, "insert">;
-
-export type Order = InferModel<typeof order>;
-export type InsertOrder = InferModel<typeof order, "insert">;
-
-export type Message = InferModel<typeof message>;
-export type InsertMessage = InferModel<typeof message, "insert">;
+//# sourceMappingURL=Schema.js.map

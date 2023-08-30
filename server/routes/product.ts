@@ -36,7 +36,11 @@ export const productRouter = router({
                 };
             }
         } catch (error) {
-            throw new TRPCClientError(error.message)
+            let errorMessage = "Failed to do something exceptional";
+            if (error instanceof Error) {
+                errorMessage = error.message;
+            }
+            throw new TRPCClientError(errorMessage)
         }
 
 
