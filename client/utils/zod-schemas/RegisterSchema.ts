@@ -7,7 +7,8 @@ const RegisterSchema = z.object({
         .refine((value: string) => /[A-Z]/.test(value), 'Password must contain at least one capital letter.')
         .refine((value: string) => /[a-z]/.test(value), 'Password must contain at least one small letter.')
         .refine((value: string) => /[!@#$%^&*()_+{}\[\]:;<>,.?~\-=/\\|]/.test(value), 'Password must contain at least one special character.')
-        .refine((value: string) => /\d/.test(value), 'Password must contain at least one number.')
+        .refine((value: string) => /\d/.test(value), 'Password must contain at least one number.'),
+    isSeller: z.boolean(),
 });
 
 export default RegisterSchema;

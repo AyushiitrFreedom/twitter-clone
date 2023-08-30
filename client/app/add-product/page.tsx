@@ -17,39 +17,45 @@ import { Timer } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox"
 
 
+
 export type FormValues = {
-    username: string;
-    password: string;
-    email: string;
-    isSeller: boolean;
+    name: string;
+    description: string;
+    price: number;
+    imageUrl: string;
 };
 
 
 
-const ZodTwitterFormSignUp = () => {
+const AddProductForm = () => {
     const { toast } = useToast()
     const router = useRouter();
-    let mutation = trpc.auth.register.useMutation();
+    let mutation = trpc.product.add.useMutation();
 
 
     const form = useForm<FormValues>({
         defaultValues: { //in default values , you can also put here something from an api
-            username: "",
-            email: "",
-            password: '',
-            isSeller: false,
+            name: "",
+            description: "",
+            price: 0,
+            imageUrl: "https://www.tundralodge.com/integration/tc-theme/public/img/placeholder_4_3.png",
         },
-        resolver: zodResolver(RegisterSchema),
+        resolver: zodResolver(z.object({
+            name: z.string().min(3, 'minimum length should be 3').max(20).nonempty("name is required"),
+            description: z.string().min(3, 'minimum length should be 3').max(50).nonempty('description is required'),
+            price: z.number(),
+            imageUrl: z.string().url().nonempty('image url is required')
+        })),
         mode: "onTouched" // this causes validaiton when u type , there are option to choose 
         //you can also do async validaiton
     });
 
-    const { register, handleSubmit, formState, control } = form;
+    const { register, handleSubmit, formState, control, reset } = form;
 
     //when we are not using zod we use register to register different form feilds 
-    // const name = register("username") , now the name is an object with various variables in it lets destructre it
+    // const name = register("name") , now the name is an object with various variables in it lets destructre it
     // const { ref, onChange, onBlur, value } = name;
-    //you can add these as input props like this <input id="username" {...register("username")} (if you are doing this you do not need to define it like this const name = register("username") above  /> or you can add them individually like this  <input id="username" ref={ref} onChange={onChange} onBlur={onBlur}  /> this enables react hook form to track the input feilds and validate them
+    //you can add these as input props like this <input id="name" {...register("name")} (if you are doing this you do not need to define it like this const name = register("name") above  /> or you can add them individually like this  <input id="name" ref={ref} onChange={onChange} onBlur={onBlur}  /> this enables react hook form to track the input feilds and validate them
 
     //form also has a watch object which helps us to watch any feild 
 
@@ -61,15 +67,15 @@ const ZodTwitterFormSignUp = () => {
     const onSubmit = async (data: FormValues) => {
         console.log(data)
         mutation.mutate(data);
-        // console.log(mutation.error?.message);
+        // console.log(data);
         // console.log("this is" + mutation.data);
-        if (mutation.error?.message == "user allready exist") {
-            console.log("yes")
+        if (mutation.error?.message == "You are not a seller") {
             toast({
                 variant: "destructive",
                 title: mutation.error?.message,
             })
-            router.push('/login')
+            router.push('/')
+
 
 
         }
@@ -80,10 +86,11 @@ const ZodTwitterFormSignUp = () => {
             })
         }
         if (mutation.isSuccess) {
-            console.log(mutation.data)
-            localStorage.setItem('token', mutation.data ? mutation.data.token : '')
-            router.push('/')
-
+            toast({
+                variant: "default",
+                title: "Product Added",
+            })
+            reset()
         }
 
 
@@ -92,43 +99,33 @@ const ZodTwitterFormSignUp = () => {
 
         //sometimes you do not how many feilds in array are required , for example in a website we have an option to add as many phone numbers as the user wants by clicking a plus sign for thisw watch video 15
     };
-    // you can also disable some feilds , for example disable = "true" or disable = watch("username")==="" ---> in this code if the username is empty then the password feild will be disabled
+    // you can also disable some feilds , for example disable = "true" or disable = watch("name")==="" ---> in this code if the name is empty then the price feild will be disabled
     return (
         <div className="border-solid border-4 flex flex-col h-screen justify-center items-center">
+            <div className="my-8 text-4xl font-bold">Add a Product</div>
 
-            <Image src="/icon/Twitter-Logo.png" alt="twitter logo" width={100} height={100} />
-            <div className="my-8 text-4xl font-bold">Sign up To Amazon</div>
 
-            {/* <Button className="rounded-full bg-white text-black border-solid  border-2 my-4"><div className="flex justify center">
-                <Image className="pr-2" src={'/icon/Google-Logo.png'} alt="Google Logo" width={30} height={30} />
-                <div className="text-black">Sign in With Google</div>
-            </div></Button> */}
             <Separator className="w-[40vh] mt-6" />
 
             <form onSubmit={handleSubmit(onSubmit)} noValidate> {/* along with onSumbit , handle sumbit also has a function to handle errors which we get while sumbiting the form */}
                 <div className="flex flex-col items-center ">
                     <div className="form-control my-4">
-                        <Input type="text" id="username" placeholder="username" {...register("username")} />
-                        <p className="text-red-600 text-sm">{errors.username?.message}</p>
+                        <Input type="text" id="name" placeholder="name" {...register("name")} />
+                        <p className="text-red-600 text-sm">{errors.name?.message}</p>
                     </div>
                     <div className="form-control my-4">
-                        <Input type="text" id="username" placeholder="email" {...register("email")} />
-                        <p className="text-red-600 text-sm">{errors.email?.message}</p>
+                        <Input type="text" id="name" placeholder="description" {...register("description")} />
+                        <p className="text-red-600 text-sm">{errors.description?.message}</p>
+                    </div>
+                    <div className="form-control my-4">
+                        <Input type="text" id="imageUrl" placeholder="imageUrl" {...register("imageUrl")} />
+                        <p className="text-red-600 text-sm">{errors.imageUrl?.message}</p>
                     </div>
                     <div className="form-control">
-                        <Input type="text" id="password" placeholder="password" {...register("password")} />
-                        <p className="text-red-600 text-sm">{errors.password?.message}</p>
+                        <Input type="number" id="price" placeholder="price" {...register("price", { valueAsNumber: true })} />
+                        <p className="text-red-600 text-sm">{errors.price?.message}</p>
                     </div>
-                    <div className='form-control mt-4'>
-                        <input
-                            type='checkbox'
-                            checked={form.watch('isSeller')}
-                            placeholder='isSeller'
-                            {...register('isSeller')}
-                            className='mx-3'
-                        />
-                        <label htmlFor=''>Are you a Seller</label>
-                    </div>
+
 
                     <Button className="my-4" disabled={!isDirty || !isValid} >Submit</Button>
                     {/* here we are using isDirty and isValid to disable the button if the form is not dirty or not valid */}
@@ -145,7 +142,7 @@ const ZodTwitterFormSignUp = () => {
     );
 };
 
-export default ZodTwitterFormSignUp;
+export default AddProductForm;
 
 
 //React form hook notes 

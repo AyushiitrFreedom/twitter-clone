@@ -14,12 +14,8 @@ import { eq } from 'drizzle-orm';
 
 const IsUser = middleware(async (opts) => {
     let result: User[] = [];
-    interface JwtPayload {
-        id: string
-    }
+
     let token = opts.ctx.req.headers.authorization ? opts.ctx.req.headers.authorization.replace("Bearer", "") : undefined;
-    console.log(token + " teri meri meri teri")
-    console.log(token)
     if (token !== null) {
         console.log('hi')
         try {
@@ -45,7 +41,11 @@ const IsUser = middleware(async (opts) => {
     console.log('hi')
     console.log(result[0])
     opts.ctx.req.user = result[0]
-    return opts.next();
+    return opts.next({
+        ctx: {
+            user: result[0]
+        }
+    });
 
 }
 );

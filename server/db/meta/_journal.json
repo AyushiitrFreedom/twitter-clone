@@ -5,29 +5,8 @@
     {
       "idx": 0,
       "version": "5",
-      "when": 1689499187855,
-      "tag": "0000_tricky_wendigo",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "5",
-      "when": 1690466949576,
-      "tag": "0001_normal_pestilence",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "5",
-      "when": 1691566673456,
-      "tag": "0002_rich_shen",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "5",
-      "when": 1693327935585,
-      "tag": "0003_graceful_venom",
+      "when": 1693376263070,
+      "tag": "0000_abnormal_squadron_supreme",
       "breakpoints": true
     }
   ]

@@ -23,35 +23,39 @@ export const authRouter = router({
                 .refine((value: string) => /[A-Z]/.test(value), 'Password must contain at least one capital letter.')
                 .refine((value: string) => /[a-z]/.test(value), 'Password must contain at least one small letter.')
                 .refine((value: string) => /[!@#$%^&*()_+{}\[\]:;<>,.?~\-=/\\|]/.test(value), 'Password must contain at least one special character.')
-                .refine((value: string) => /\d/.test(value), 'Password must contain at least one number.')
+                .refine((value: string) => /\d/.test(value), 'Password must contain at least one number.'),
+            isSeller: z.boolean(),
         })
     ).mutation(async (opts) => {
         //checking for existing user
-        const existingUser = await db.select().from(user).where(eq(user.email, opts.input.email));
-        console.log(existingUser)
-        if (existingUser[0]) {
-            throw new TRPCClientError("user allready exist")
-        }
-        const newUser = async (t: InsertUser) => {
-            return db.insert(user).values(t);
-        }
-        console.log(opts);
+        try {
+            console.log('hi')
+            const existingUser = await db.select().from(user).where(eq(user.email, opts.input.email));
+            console.log(existingUser)
+            if (existingUser[0]) {
+                throw new TRPCClientError("user allready exist")
+            }
+            const newUser = async (t: InsertUser) => {
+                return db.insert(user).values(t);
+            }
+            console.log(opts);
 
-        const userPassword = await GeneratePassword(opts.input.password);
+            const userPassword = await GeneratePassword(opts.input.password);
 
-        const newuser: InsertUser = { username: opts.input.username, email: opts.input.email, password: userPassword, id: uuidv4() };
-        const result = await newUser(newuser);
-        console.log(result);
-        const token = jwtMaker({ id: newuser.id });
-        if (result) {
-            return {
-                status: "success",
-                token: "Bearer" + token,
-            };
+            const newuser: InsertUser = { username: opts.input.username, email: opts.input.email, password: userPassword, id: uuidv4(), isSeller: opts.input.isSeller };
+            const result = await newUser(newuser);
+            console.log(result);
+            const token = jwtMaker({ id: newuser.id });
+            if (result) {
+                return {
+                    status: "success",
+                    token: "Bearer" + token,
+                };
+            }
+        } catch (error) {
+            throw new TRPCClientError(error.message)
         }
-        else {
-            throw new TRPCClientError("Server Error")
-        }
+
 
     }),
     login: publicProcedure.input(z.object({
@@ -90,7 +94,7 @@ export const authRouter = router({
             if (error instanceof Error) {
                 errorMessage = error.message;
             }
-            throw new TRPCClientError("server error")
+            throw new TRPCClientError(errorMessage)
         }
 
     }),
