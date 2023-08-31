@@ -20,7 +20,7 @@ const Navbar = () => {
                         <i className="fa-solid fa-cart-shopping" style={{ color: "#ffffff" }}></i>
                     </Link>
                     <button className="text-white mx-4">
-                        <i className="fa-solid fa-right-from-bracket" style={{ color: "#ffffff;" }}></i>
+                        <i className="fa-solid fa-right-from-bracket" style={{ color: "#ffffff" }}></i>
                     </button>
                     {/* Add your logout button here */}
                 </div>

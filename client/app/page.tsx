@@ -13,6 +13,23 @@ const AllProducts = () => {
   const { toast } = useToast();
   const [searchQuery, setSearchQuery] = useState(""); // Search query state
   let { data: name, isLoading, isFetching, isError, error } = trpc.product.getall.useQuery();
+
+  //add product to cart mutation 
+  let mutation = trpc.order.add.useMutation({
+    onSuccess: () => {
+      toast({
+        variant: "success",
+        title: "Product Added to cart",
+      });
+    },
+    onError: (error) => {
+      toast({
+        variant: "destructive",
+        title: error.message,
+      });
+
+    }
+  })
   useEffect(() => {
     if (isError) {
       toast({
@@ -25,6 +42,11 @@ const AllProducts = () => {
 
   if (isLoading || isFetching) {
     return <Spinner />
+  }
+  // Add to Cart Logic 
+  const addToCart = (id: string) => {
+    console.log("Let's do it")
+    mutation.mutate({ id });
   }
   const productList = name as Product[];
   const filteredProducts = searchQuery
@@ -48,6 +70,7 @@ const AllProducts = () => {
               name={product.name as string}
               price={product.price as number}
               imageUrl={product.imageUrl as string}
+              AddToCart={() => addToCart(product.product_id as string)}
             />
           </div>
         ))}
