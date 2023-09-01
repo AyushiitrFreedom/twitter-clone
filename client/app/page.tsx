@@ -2,17 +2,20 @@
 import Spinner from "@/components/ui/spinner";
 import { useToast } from "@/components/ui/use-toast";
 import { trpc } from "@/utils/trpc";
-import router from "next/navigation";
 import { useEffect, useState } from "react";
 import { Product } from "../../server/db/schema/Schema";
 import Productcard from "@/components/ui/productcard";
 import Navbar from "@/components/ui/Navbar";
 import Search from "@/components/ui/search";
+import { useRouter } from 'next/navigation'
+
 
 const AllProducts = () => {
+  const router = useRouter()
+
   const { toast } = useToast();
   const [searchQuery, setSearchQuery] = useState(""); // Search query state
-  let { data: name, isLoading, isFetching, isError, error } = trpc.product.getall.useQuery();
+  let { data: name, isLoading, isFetching, isError, error } = trpc.product.getall.useQuery(undefined, { retry: 1 });
 
   //add product to cart mutation 
   let mutation = trpc.order.add.useMutation({
@@ -35,17 +38,23 @@ const AllProducts = () => {
       toast({
         variant: "destructive",
         title: error?.message,
+
+
       });
+      if (error?.message == "You must be logged in to do this") {
+        router.push('/login');
+      }
 
     }
-  }, [isError, error, toast, router]);
+
+  }
+    , [isError, error, toast, router]);
 
   if (isLoading || isFetching) {
     return <Spinner />
   }
   // Add to Cart Logic 
   const addToCart = (id: string) => {
-    console.log("Let's do it")
     mutation.mutate({ id });
   }
   const productList = name as Product[];
@@ -54,6 +63,13 @@ const AllProducts = () => {
       product.name?.toLowerCase().includes(searchQuery.toLowerCase())
     )
     : productList;
+
+  if (productList === undefined || productList.length === 0) {
+    return <div className="flex justify-center mt-8">
+      <Search value={searchQuery} onChange={(newValue) => setSearchQuery(newValue)}
+        placeholder="Search products..." />
+    </div>
+  }
 
   return <>
 

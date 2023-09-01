@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "pg",
-  "id": "bce44e0a-5c73-403c-8b61-e4d600556c64",
+  "id": "3010a0d7-dccb-4aec-9f86-3672e3e49476",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "message": {

@@ -1,7 +1,36 @@
+"use client";
+import { trpc } from "@/utils/trpc";
 import Link from "next/link";
+import { toast } from "./use-toast";
+
+import { useRouter } from 'next/navigation'
 
 
 const Navbar = () => {
+    const router = useRouter()
+    let mutation = trpc.auth.logout.useMutation({
+        onSuccess: (data) => {
+            toast({
+                variant: "success",
+                title: "Logged out successfully",
+            });
+
+
+        },
+        onError: (error) => {
+            toast({
+                variant: "destructive",
+                title: error.message,
+            });
+
+        }
+    })
+    const logout = () => {
+        localStorage.removeItem('token');
+        mutation.mutate();
+
+    }
+
     return <>
         <nav className="bg-gray-800 py-4">
             <div className="container mx-auto flex items-center justify-between">
@@ -19,9 +48,17 @@ const Navbar = () => {
                     <Link className="text-white mx-4" href={'/cart'}>
                         <i className="fa-solid fa-cart-shopping" style={{ color: "#ffffff" }}></i>
                     </Link>
-                    <button className="text-white mx-4">
+                    <Link href={'/orders'} className="text-white mx-4">
+                        <i className="fa-solid fa-check" style={{ color: "#ffffff" }}></i>
+                    </Link>
+
+                    <button onClick={() => {
+                        logout();
+                        router.push('/login');
+                    }} className="text-white mx-4">
                         <i className="fa-solid fa-right-from-bracket" style={{ color: "#ffffff" }}></i>
                     </button>
+
                     {/* Add your logout button here */}
                 </div>
             </div>

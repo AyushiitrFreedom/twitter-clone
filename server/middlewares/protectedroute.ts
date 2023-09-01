@@ -15,9 +15,11 @@ import { eq } from 'drizzle-orm';
 const IsUser = middleware(async (opts) => {
     let result: User[] = [];
 
+
     let token = opts.ctx.req.headers.authorization ? opts.ctx.req.headers.authorization.replace("Bearer", "") : undefined;
-    if (token !== null) {
-        console.log('hi')
+    console.log(opts.ctx.req.headers.authorization + "ab maja aega n bidu")
+    if (token !== undefined) {
+
         try {
             const verify = jsonwebtoken.verify(token as string, process.env.JWT_SECRET as string);
             if (typeof verify !== 'string') {
@@ -38,8 +40,7 @@ const IsUser = middleware(async (opts) => {
         });
 
     }
-    console.log('hi')
-    console.log(result[0])
+
     opts.ctx.req.user = result[0]
     return opts.next({
         ctx: {

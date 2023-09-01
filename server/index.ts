@@ -1,6 +1,6 @@
 import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
-
+import * as schema from './db/schema/Schema';
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
@@ -19,7 +19,7 @@ import('./middlewares/passport');
 
 const PostgresqlStore = genFunc(session);
 const sessionStore = new PostgresqlStore({
-    conString: 'postgres://myuser2:1234@localhost:5432/twitterX',
+    conString: 'postgres://srk:ddlj@localhost:5432/amazon',
     createTableIfMissing: true,
 });
 
@@ -27,9 +27,9 @@ const sessionStore = new PostgresqlStore({
 const client = new Client({
     host: "127.0.0.1",
     port: 5432,
-    user: "myuser2",
-    password: "1234",
-    database: "twitterX",
+    user: "srk",
+    password: "ddlj",
+    database: "amazon",
 });
 
 const connectdb = async () => {
@@ -37,7 +37,7 @@ const connectdb = async () => {
     await client.connect();
 }
 connectdb();
-export const db = drizzle(client);
+export const db = drizzle(client, { schema });
 // await migrate({ client }, './db');trpc
 
 
@@ -68,10 +68,10 @@ app.get('/auth/callback',
         // Successful authentication, redirect or respond as needed
         const user = req.user as any;
         const session = req.session;
-        console.log("session");
-        console.log(session);
-        console.log("user");
-        console.log(user._json);
+        // console.log("session");
+        // console.log(session);
+        // console.log("user");
+        // console.log(user._json);
         res.redirect('http://localhost:3000/');
     });
 

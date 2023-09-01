@@ -10,6 +10,7 @@ import { DevTool } from "@hookform/devtools";
 import { toast, useToast } from "@/components/ui/use-toast"
 import { trpc } from "@/utils/trpc";
 import { useRouter } from 'next/navigation'
+import Link from "next/link";
 
 type FormValues = {
     username: string;
@@ -28,19 +29,19 @@ const schema = z.object({
 
 const ZodYouTubeForm = () => {
     let mutation = trpc.auth.login.useMutation({
-        onSuccess: () => {
+        onSuccess: (data) => {
+            localStorage.setItem('token', data ? data.token : '')
             toast({
                 variant: "success",
                 title: "Success",
             });
 
-            localStorage.setItem('token', mutation.data ? mutation.data.token : '')
             router.push('/')
         },
         onError: (error) => {
             toast({
                 variant: "destructive",
-                title: mutation.error?.message,
+                title: error?.message,
             })
 
 
@@ -118,10 +119,8 @@ const ZodYouTubeForm = () => {
             </form>
 
             <DevTool control={control} />
-            <Button className="rounded-full bg-white text-black border-solid  border-2 px-8 ">
-                <div className="text-black">forgot password</div>
-            </Button>
-            <div className="mt-4">Don&apos;t have an acount? <span className="text-blue-700">Singup</span></div>
+
+            <div className="mt-4">Don&apos;t have an acount? <Link href={'/register'}> <span className="text-blue-700">Singup</span> </Link></div>
         </div>
         // devtool to visualize react hook form , control is a object destructured from useForm hook and these track the state without rerendering the whole conmpnent while if we have used state the whole componenet would have been re rendered
 

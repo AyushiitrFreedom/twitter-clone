@@ -29,24 +29,26 @@ export const authRouter = router({
     ).mutation(async (opts) => {
         //checking for existing user
         try {
-            console.log('hi')
+
             const existingUser = await db.select().from(user).where(eq(user.email, opts.input.email));
-            console.log(existingUser)
+
             if (existingUser[0]) {
                 throw new TRPCClientError("user allready exist")
             }
             const newUser = async (t: InsertUser) => {
                 return db.insert(user).values(t);
             }
-            console.log(opts);
+
 
             const userPassword = await GeneratePassword(opts.input.password);
 
             const newuser: InsertUser = { username: opts.input.username, email: opts.input.email, password: userPassword, id: uuidv4(), isSeller: opts.input.isSeller };
             const result = await newUser(newuser);
-            console.log(result);
+            console.log(result + "new user")
+
             const token = jwtMaker({ id: newuser.id });
             if (result) {
+                console.log(token)
                 return {
                     status: "success",
                     token: "Bearer" + token,
@@ -72,6 +74,7 @@ export const authRouter = router({
     })).mutation(async (opts) => {
         try {
             const { email, password } = opts.input;
+            console.log(password, "ye hai password")
 
             // Check if user with the given username exists
             const existingUser = await db.select().from(user).where(eq(user.email, email));
@@ -104,10 +107,10 @@ export const authRouter = router({
     }),
     test: publicProcedure.query(async (opts) => {
         const result: User[] = await db.select().from(user).where(eq(user.email, "ayush_g@ar.iitr.ac.in"));
-        console.log(!result[0]);
+
         return result
     }),
-    logout: publicProcedure.query(async (opts) => {
+    logout: publicProcedure.mutation(async (opts) => {
         opts.ctx.req.logout(function (err) {
             if (err) { return (err); }
         });

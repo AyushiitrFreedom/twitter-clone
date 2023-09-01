@@ -3,6 +3,7 @@ import { userProcedure } from '../middlewares/protectedroute';
 import { router } from '../trpc';
 import { db } from '..';
 import { product } from '../db/schema/Schema';
+import { eq } from 'drizzle-orm';
 import { TRPCClientError } from '@trpc/client';
 import { v4 as uuidv4 } from 'uuid';
 export const productRouter = router({
@@ -28,6 +29,40 @@ export const productRouter = router({
                     status: "success",
                 };
             }
+        }
+        catch (error) {
+            let errorMessage = "Failed to do something exceptional";
+            if (error instanceof Error) {
+                errorMessage = error.message;
+            }
+            throw new TRPCClientError(errorMessage);
+        }
+    }),
+    get: userProcedure.input(z.object({
+        id: z.string().nonempty("id is required")
+    })).query(async (opts) => {
+        try {
+            const products = await db.select().from(product).where(eq(product.product_id, opts.input.id));
+            if (!products[0]) {
+                throw new TRPCClientError("product not found");
+            }
+            return products[0];
+        }
+        catch (error) {
+            let errorMessage = "Failed to do something exceptional";
+            if (error instanceof Error) {
+                errorMessage = error.message;
+            }
+            throw new TRPCClientError(errorMessage);
+        }
+    }),
+    getall: userProcedure.query(async (opts) => {
+        try {
+            const products = await db.select().from(product);
+            if (!products[0]) {
+                throw new TRPCClientError("No Products Found");
+            }
+            return products;
         }
         catch (error) {
             let errorMessage = "Failed to do something exceptional";

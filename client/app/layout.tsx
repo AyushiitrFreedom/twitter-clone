@@ -4,6 +4,7 @@ import { Inter } from 'next/font/google'
 import { Toaster } from "@/components/ui/toaster"
 const inter = Inter({ subsets: ['latin'] })
 import { TrpcProvider } from "@/utils/trpc-provider";
+import Script from 'next/script'
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -19,8 +20,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <script src="https://kit.fontawesome.com/f0c2f16b90.js" crossOrigin="anonymous"></script>
-
+        <Script src="https://kit.fontawesome.com/f0c2f16b90.js" crossOrigin="anonymous"></Script>
       </head>
       <body>
         <TrpcProvider>{children}</TrpcProvider>

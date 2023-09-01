@@ -15,15 +15,15 @@ import passport from "passport";
 import('./middlewares/passport');
 const PostgresqlStore = genFunc(session);
 const sessionStore = new PostgresqlStore({
-    conString: 'postgres://myuser2:1234@localhost:5432/twitterX',
+    conString: 'postgres://srk:ddlj@localhost:5432/amazon',
     createTableIfMissing: true,
 });
 const client = new Client({
     host: "127.0.0.1",
     port: 5432,
-    user: "myuser2",
-    password: "1234",
-    database: "twitterX",
+    user: "srk",
+    password: "ddlj",
+    database: "amazon",
 });
 const connectdb = async () => {
     await client.connect();

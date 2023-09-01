@@ -28,6 +28,7 @@ passport.use(new GoogleStrategy({
                 id: profile._json.id,
                 authType: 'oauth'
             }
+
             console.log(profile._json.email + "mummy nu pasand");
             console.log(typeof userData.email + "mummy nu pasand");
             const result: User[] = await db.select().from(user).where(eq(user.email, userData.email));

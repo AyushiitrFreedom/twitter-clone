@@ -37,7 +37,7 @@ export const TrpcProvider: React.FC<{ children: React.ReactNode }> = ({
                         });
                     },
                     headers: {
-                        Authorization: `${typeof window !== "undefined" ? localStorage.getItem('token') : undefined}`,
+                        Authorization: localStorage.getItem('token') as string,
 
                     }
                 }),

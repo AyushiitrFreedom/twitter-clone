@@ -1,14 +1,12 @@
-import { publicProcedure, router } from "../trpc";
+import { router } from "../trpc";
 import { authRouter } from './auth';
 import { homeRouter } from './home';
 import { productRouter } from './product';
-import { TRPCClientError } from "@trpc/client";
+import { orderRouter } from './order';
 export const appRouter = router({
     auth: authRouter,
     home: homeRouter,
-    hello: publicProcedure.query(async (opts) => {
-        throw new TRPCClientError("hi");
-    }),
-    product: productRouter
+    product: productRouter,
+    order: orderRouter
 });
 //# sourceMappingURL=index.js.map

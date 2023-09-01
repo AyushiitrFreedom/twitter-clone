@@ -30,21 +30,23 @@ const ZodTwitterFormSignUp = () => {
     const { toast } = useToast()
     const router = useRouter();
     let mutation = trpc.auth.register.useMutation({
-        onSuccess: () => {
+        onSuccess: (data) => {
+
+            console.log(data?.token + "tamma tamma loge");
+            localStorage.setItem('token', data ? data.token : '')
             toast({
                 variant: "success",
                 title: "Success",
             });
 
-            localStorage.setItem('token', mutation.data ? mutation.data.token : '')
             router.push('/')
         },
         onError: (error) => {
             toast({
                 variant: "destructive",
-                title: mutation.error?.message,
+                title: error?.message,
             })
-            if (mutation.error?.message == "user allready exist") {
+            if (error?.message == "user allready exist") {
 
                 router.push('/login')
 
@@ -87,26 +89,10 @@ const ZodTwitterFormSignUp = () => {
         mutation.mutate(data);
         // console.log(mutation.error?.message);
         // console.log("this is" + mutation.data);
-        if (mutation.error?.message == "user allready exist") {
-            console.log("yes")
 
-            router.push('/login')
-
-
-        }
-        if (mutation.error?.message == "Server Error") {
-            toast({
-                variant: "destructive",
-                title: mutation.error?.message,
-            })
-        }
         if (mutation.isSuccess) {
-            console.log(mutation.data)
-            localStorage.setItem('token', mutation.data ? mutation.data.token : '')
-            router.push('/')
 
         }
-
 
         //you can console log this to see what is the structure of the data being recieved from the form
         //also suppose the api accept the data in some other form or structure then also you can modify data here before sending it to the api with nested objects you can group some properties checkout video 13 , insted of nested objects you can also use arrays to group some properties video 14

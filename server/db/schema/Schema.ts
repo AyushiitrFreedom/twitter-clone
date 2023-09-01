@@ -1,5 +1,5 @@
 import { pgTable, text, uuid, serial, integer, boolean } from 'drizzle-orm/pg-core';
-import { InferModel } from 'drizzle-orm';
+import { InferModel, relations } from 'drizzle-orm';
 
 
 export const user = pgTable('buyers', {
@@ -28,7 +28,13 @@ export const order = pgTable('order', {
     is_bought: boolean('is_bought'),
 });
 
-// Messages Table
+
+export const orderRelations = relations(order, ({ one }) => ({
+    product: one(product, {
+        fields: [order.product_id],
+        references: [product.product_id],
+    }),
+}));// Messages Table
 export const message = pgTable('message', {
     message_id: text('message_id').primaryKey(),
     sender_id: text('sender_id').references(() => user.id),
