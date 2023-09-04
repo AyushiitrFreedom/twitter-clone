@@ -14,8 +14,18 @@ function Page() {
     const router = useRouter()
 
     const { toast } = useToast();
+    const queryError = (error: any) => {
+        if (error?.message == "You must be logged in to do this") {
+            router.push('/login');
+        }
 
-    let { data: allChats, isLoading, isFetching, isError, error } = trpc.message.getall.useQuery(undefined, { retry: 1 });
+        toast({
+            variant: "destructive",
+            title: error?.message,
+        })
+
+    }
+    let { data: allChats, isLoading, isFetching, isError, error } = trpc.message.getall.useQuery(undefined, { retry: 1, onError: queryError });
     let { data: userId } = trpc.auth.getUserId.useQuery(undefined, { retry: 1 });
 
     const i: messageType[] = allChats as messageType[]
@@ -24,18 +34,6 @@ function Page() {
     console.log(chat, "chat")
 
     useEffect(() => {
-        if (isError) {
-            toast({
-                variant: "destructive",
-                title: error?.message,
-
-
-            });
-            if (error?.message == "You must be logged in to do this") {
-                router.push('/login');
-            }
-
-        }
         socket.on('chat', (data: messageType) => {
             if (data.sender_id || data.recipient_id === userId) {
                 console.log(userId, "user id")
@@ -45,7 +43,7 @@ function Page() {
         })
 
 
-    }, [isError, error, toast, router, allChats, chat]);
+    },);
 
     if (isLoading || isFetching) {
         return <Spinner />

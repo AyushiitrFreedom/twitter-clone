@@ -11,12 +11,12 @@ function Page() {
     }
 
     if (isError) {
-        return <p>There was an {error.message}</p>;
+        return <p>There was an {error?.message}</p>;
     }
 
 
     return (
-        <div>{name.status}</div>
+        <div>{name?.status}</div>
     )
 }
 

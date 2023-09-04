@@ -14,9 +14,20 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 const AllProducts = () => {
   const router = useRouter()
 
+  const queryError = (error: any) => {
+    if (error?.message == "You must be logged in to do this") {
+      router.push('/login');
+    }
+
+    toast({
+      variant: "destructive",
+      title: error?.message,
+    })
+
+  }
   const { toast } = useToast();
   const [searchQuery, setSearchQuery] = useState(""); // Search query state
-  let { data: name, isLoading, isFetching, isError, error } = trpc.product.getall.useQuery(undefined, { retry: 0 });
+  let { data: name, isLoading, isFetching, isError, error } = trpc.product.getall.useQuery(undefined, { retry: 0, onError: queryError });
 
   //add product to cart mutation 
   let mutation = trpc.order.add.useMutation({
@@ -34,22 +45,7 @@ const AllProducts = () => {
 
     }
   })
-  useEffect(() => {
-    if (isError) {
-      toast({
-        variant: "destructive",
-        title: error?.message,
 
-
-      });
-      if (error?.message == "You must be logged in to do this") {
-        router.push('/login');
-      }
-
-    }
-
-  }
-    , [isError, error, toast, router]);
 
   if (isLoading || isFetching) {
     return <Spinner />

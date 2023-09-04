@@ -1,8 +1,8 @@
 "use client";
 import Spinner from '@/components/ui/spinner';
-import { toast } from '@/components/ui/use-toast';
+import { useToast } from '@/components/ui/use-toast';
 import { trpc } from '@/utils/trpc';
-import router from 'next/navigation';
+import router, { useRouter } from 'next/navigation';
 import React, { useEffect } from 'react'
 import BlogCard from '@/components/ui/cartcard';
 import OrderCard from '@/components/ui/ordercard';
@@ -10,16 +10,21 @@ import OrderCard from '@/components/ui/ordercard';
 
 
 function Cart() {
-    let { data: orders, isLoading, isFetching, isError, error, refetch } = trpc.order.getallorders.useQuery(undefined, { retry: 1 });
-    useEffect(() => {
-        if (isError) {
-            toast({
-                variant: "destructive",
-                title: error?.message,
-            });
-
+    const { toast } = useToast();
+    const router = useRouter()
+    const queryError = (error: any) => {
+        if (error?.message == "You must be logged in to do this") {
+            router.push('/login');
         }
-    }, [isError, error, toast, router]);
+
+        toast({
+            variant: "destructive",
+            title: error?.message,
+        })
+
+    }
+    let { data: orders, isLoading, isFetching, isError, error, refetch } = trpc.order.getallorders.useQuery(undefined, { retry: 1 });
+
 
     if (isLoading || isFetching) {
         return <Spinner />
