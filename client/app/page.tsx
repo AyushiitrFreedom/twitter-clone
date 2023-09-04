@@ -8,6 +8,7 @@ import Productcard from "@/components/ui/productcard";
 import Navbar from "@/components/ui/Navbar";
 import Search from "@/components/ui/search";
 import { useRouter } from 'next/navigation'
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 
 
 const AllProducts = () => {
@@ -15,7 +16,7 @@ const AllProducts = () => {
 
   const { toast } = useToast();
   const [searchQuery, setSearchQuery] = useState(""); // Search query state
-  let { data: name, isLoading, isFetching, isError, error } = trpc.product.getall.useQuery(undefined, { retry: 1 });
+  let { data: name, isLoading, isFetching, isError, error } = trpc.product.getall.useQuery(undefined, { retry: 0 });
 
   //add product to cart mutation 
   let mutation = trpc.order.add.useMutation({
@@ -87,6 +88,7 @@ const AllProducts = () => {
               price={product.price as number}
               imageUrl={product.imageUrl as string}
               AddToCart={() => addToCart(product.product_id as string)}
+              sellerId={product.seller_id as string}
             />
           </div>
         ))}

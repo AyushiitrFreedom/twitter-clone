@@ -12,6 +12,7 @@ import { string, z } from 'zod';
 import { TRPCClientError } from '@trpc/client';
 import CustomError from '../utils/errors/customerror';
 import RegisterSchema from "../../client/utils/zod-schemas/RegisterSchema";
+import { userProcedure } from '../middlewares/protectedroute';
 
 
 export const authRouter = router({
@@ -78,7 +79,7 @@ export const authRouter = router({
 
             // Check if user with the given username exists
             const existingUser = await db.select().from(user).where(eq(user.email, email));
-            if (!existingUser) {
+            if (existingUser === undefined || existingUser.length === 0) {
                 throw new TRPCClientError("User not found")
             }
 
@@ -105,21 +106,15 @@ export const authRouter = router({
         }
 
     }),
-    test: publicProcedure.query(async (opts) => {
-        const result: User[] = await db.select().from(user).where(eq(user.email, "ayush_g@ar.iitr.ac.in"));
 
-        return result
-    }),
     logout: publicProcedure.mutation(async (opts) => {
         opts.ctx.req.logout(function (err) {
             if (err) { return (err); }
         });
     }),
-    hello: publicProcedure.query(async (opts) => {
-        return {
-            status: "success",
-        };
-    }),
+    getUserId: userProcedure.query(async (opts) => {
+        return opts.ctx.user.id;
+    })
 
 
 })

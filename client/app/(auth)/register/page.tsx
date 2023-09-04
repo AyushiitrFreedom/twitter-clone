@@ -40,6 +40,7 @@ const ZodTwitterFormSignUp = () => {
             });
 
             router.push('/')
+            // router.refresh(); ---> not working 
         },
         onError: (error) => {
             toast({

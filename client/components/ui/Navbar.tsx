@@ -51,6 +51,9 @@ const Navbar = () => {
                     <Link href={'/orders'} className="text-white mx-4">
                         <i className="fa-solid fa-check" style={{ color: "#ffffff" }}></i>
                     </Link>
+                    <Link href={'/chat'} className="text-white mx-4">
+                        <i className="fa-solid fa-comment" style={{ color: "#ffffff" }}></i>
+                    </Link>
 
                     <button onClick={() => {
                         logout();

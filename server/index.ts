@@ -24,6 +24,7 @@ const sessionStore = new PostgresqlStore({
 });
 
 
+
 const client = new Client({
     host: "127.0.0.1",
     port: 5432,
@@ -42,14 +43,13 @@ export const db = drizzle(client, { schema });
 
 
 const app = express();
-// app.use(function (req, res, next) {
-//     res.header("Access-Control-Allow-Origin", "http://localhost:3000");
-//     res.header("Access-Control-Allow-Methods", "*");
-//     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-//     next();
-// });
+
+
+
+
+
 app.use(cors({ origin: "http://localhost:3000", methods: ['GET', 'POST'], credentials: true }));
-// undefined
+
 app.use(express.json());
 dotenv.config();
 app.use(session({
@@ -79,7 +79,29 @@ app.get('/auth/callback',
 app.use("/", createExpressMiddleware({ router: appRouter, createContext: createContext }));
 // app.use("/api/notes", require("./routes/notes"));
 
+
+// Web Sockets Implementation 
+const server = require('http').createServer(app);
+const io = require('socket.io')(server, {
+    cors: {
+        origin: "*",
+    }
+})
+
+io.on('connection', (socket: any) => {
+    console.log("what is a socket", socket)
+    console.log("socket is active to be connected")
+
+    socket.on('chat', (payload: any) => {
+        console.log("what is a payload", payload)
+        io.emit('chat', payload)
+    });
+});
+
 app.listen(process.env.EXPRESS_PORT, () => {
     console.log(`Example app listening on port ${process.env.EXPRESS_PORT}`);
 });
 
+server.listen(5050, () => {
+    console.log("socket is active at port 5050")
+})

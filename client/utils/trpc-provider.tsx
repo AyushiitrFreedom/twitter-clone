@@ -21,6 +21,8 @@ export const TrpcProvider: React.FC<{ children: React.ReactNode }> = ({
         ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`
         : "http://localhost:5000";
 
+    const token = window.localStorage.getItem('token');
+
     const [trpcClient] = useState(() =>
         trpc.createClient({
             links: [
@@ -37,7 +39,7 @@ export const TrpcProvider: React.FC<{ children: React.ReactNode }> = ({
                         });
                     },
                     headers: {
-                        Authorization: localStorage.getItem('token') as string,
+                        Authorization: token as string
 
                     }
                 }),

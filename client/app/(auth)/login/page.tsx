@@ -35,7 +35,7 @@ const ZodYouTubeForm = () => {
                 variant: "success",
                 title: "Success",
             });
-
+            router.refresh();
             router.push('/')
         },
         onError: (error) => {
