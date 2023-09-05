@@ -21,7 +21,7 @@ import('./middlewares/passport');
 
 const PostgresqlStore = genFunc(session);
 const sessionStore = new PostgresqlStore({
-    conString: 'postgres://srk:ddlj@localhost:5432/amazon',
+    conString: `postgres://${process.env.DATABASE_USER}:${process.env.DATABASE_PASSWORD}@localhost:5432/${process.env.DATABASE}`,
     createTableIfMissing: true,
 });
 
@@ -30,9 +30,9 @@ const sessionStore = new PostgresqlStore({
 const client = new Client({
     host: "127.0.0.1",
     port: 5432,
-    user: "srk",
-    password: "ddlj",
-    database: "amazon",
+    user: process.env.DATABASE_USER,
+    password: process.env.DATABASE_PASSWORD,
+    database: process.env.DATABASE_NAME,
 });
 
 const connectdb = async () => {

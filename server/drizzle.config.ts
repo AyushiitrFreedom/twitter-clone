@@ -5,6 +5,6 @@ export default {
     out: "./db",
     driver: 'pg',
     dbCredentials: {
-        connectionString: process.env.DATABASE_CONNECTION_URL || "postgres://srk:ddlj@localhost:5432/amazon",
+        connectionString: `postgres://${process.env.DATABASE_USER}:${process.env.DATABASE_PASSWORD}@localhost:5432/${process.env.DATABASE}`,
     }
 } satisfies Config;
