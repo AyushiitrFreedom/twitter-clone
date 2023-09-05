@@ -68,7 +68,7 @@ const Productcard = ({ name, price, imageUrl, AddToCart, sellerId }: ProductCard
         setMessage('')
     }
     return <div className="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-        <img className="p-8 rounded-t-lg" src={imageUrl} alt="product image" style={{ maxHeight: "240px" }} />
+        <img className="p-8 rounded-t-lg" src={imageUrl} alt="product image" style={{ maxHeight: "240px", minHeight: '240px' }} />
 
 
         <div className="px-5 pb-5">

@@ -27,7 +27,7 @@ const AllProducts = () => {
   }
   const { toast } = useToast();
   const [searchQuery, setSearchQuery] = useState(""); // Search query state
-  let { data: name, isLoading, isFetching, isError, error } = trpc.product.getall.useQuery(undefined, { retry: 0, onError: queryError });
+  let { data: name, isLoading, isFetching, isError, error } = trpc.product.getall.useQuery(undefined, { retry: 1, onError: queryError, staleTime: 0 });
 
   //add product to cart mutation 
   let mutation = trpc.order.add.useMutation({

@@ -4,9 +4,11 @@ import Link from "next/link";
 import { toast } from "./use-toast";
 
 import { useRouter } from 'next/navigation'
+import { useQueryClient } from "@tanstack/react-query";
 
 
 const Navbar = () => {
+    const queryClient = useQueryClient();
     const router = useRouter()
     let mutation = trpc.auth.logout.useMutation({
         onSuccess: (data) => {
@@ -14,6 +16,7 @@ const Navbar = () => {
                 variant: "success",
                 title: "Logged out successfully",
             });
+
 
 
         },
@@ -26,7 +29,8 @@ const Navbar = () => {
         }
     })
     const logout = () => {
-        localStorage.removeItem('token');
+        // localStorage.removeItem('token');
+        document.cookie = 'token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
         mutation.mutate();
 
     }
@@ -57,7 +61,11 @@ const Navbar = () => {
 
                     <button onClick={() => {
                         logout();
+
+
+                        // queryClient.invalidateQueries(["order", "getallcart"]);
                         router.push('/login');
+
                     }} className="text-white mx-4">
                         <i className="fa-solid fa-right-from-bracket" style={{ color: "#ffffff" }}></i>
                     </button>

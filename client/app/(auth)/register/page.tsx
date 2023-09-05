@@ -15,6 +15,7 @@ import RegisterSchema from "@/utils/zod-schemas/RegisterSchema";
 import { ToastAction } from "@/components/ui/toast";
 import { Timer } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox"
+import { useEffect } from "react";
 
 
 export type FormValues = {
@@ -32,8 +33,9 @@ const ZodTwitterFormSignUp = () => {
     let mutation = trpc.auth.register.useMutation({
         onSuccess: (data) => {
 
-            console.log(data?.token + "tamma tamma loge");
-            localStorage.setItem('token', data ? data.token : '')
+            // localStorage.setItem('token', data ? data.token : '')
+            document.cookie = `token=${data ? data.token : ''}`
+
             toast({
                 variant: "success",
                 title: "Success",
@@ -58,6 +60,8 @@ const ZodTwitterFormSignUp = () => {
 
     },
     );
+
+
 
 
     const form = useForm<FormValues>({

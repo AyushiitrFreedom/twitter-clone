@@ -70,9 +70,9 @@ export const orderRouter = router({
                     product: true
                 }
             })
-            if (!orders[0]) {
-                throw new TRPCClientError("No orders Found")
-            }
+            // if (!orders[0]) {
+            //     throw new TRPCClientError("No orders Found")
+            // }
             console.log(orders + "orders")
             return orders;
         } catch (error) {

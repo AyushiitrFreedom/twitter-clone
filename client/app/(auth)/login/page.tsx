@@ -11,6 +11,7 @@ import { toast, useToast } from "@/components/ui/use-toast"
 import { trpc } from "@/utils/trpc";
 import { useRouter } from 'next/navigation'
 import Link from "next/link";
+import { useEffect } from "react";
 
 type FormValues = {
     username: string;
@@ -30,7 +31,8 @@ const schema = z.object({
 const ZodYouTubeForm = () => {
     let mutation = trpc.auth.login.useMutation({
         onSuccess: (data) => {
-            localStorage.setItem('token', data ? data.token : '')
+            // localStorage.setItem('token', data ? data.token : '')
+            document.cookie = `token=${data ? data.token : ''}`
             toast({
                 variant: "success",
                 title: "Success",
@@ -52,6 +54,8 @@ const ZodYouTubeForm = () => {
         ,);
     const { toast } = useToast()
     const router = useRouter();
+
+
     const form = useForm<FormValues>({
         defaultValues: { //in default values , you can also put here something from an api
             email: "",

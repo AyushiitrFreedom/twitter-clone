@@ -6,6 +6,7 @@ import passport from 'passport';
 import { user, User, InsertUser } from '../db/schema/Schema';
 import { db } from "../index";
 import { eq } from 'drizzle-orm';
+import { response } from 'express';
 
 
 
@@ -31,13 +32,13 @@ passport.use(new GoogleStrategy({
 
             console.log(profile._json.email + "mummy nu pasand");
             console.log(typeof userData.email + "mummy nu pasand");
-            const result: User[] = await db.select().from(user).where(eq(user.email, userData.email));
+            const result: User[] = await db.select().from(user).where(eq(user.email, profile._json.email));
             console.log(result[0] + "yo yo honey singh");
-            if (result) {
-                return cb(null, result);
-            } else {
+            if (result[0] === undefined || result[0] === null) {
                 console.log("NO result");
-                return cb(null, false)
+                return cb(null, false, { message: "user not found" })
+            } else {
+                return cb(null, result[0])
             }
 
 

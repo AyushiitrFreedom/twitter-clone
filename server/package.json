@@ -43,7 +43,7 @@
     "typescript": "^5.1.6"
   },
   "scripts": {
-    "start": " node --loader ts-node/esm index.ts",
+    "start": " node --inspect --loader ts-node/esm index.ts",
     "build": "tsc --project ./",
     "generate": "drizzle-kit generate:pg --config=drizzle.config.ts",
     "migrate": "npx bun run ./migrate.ts"

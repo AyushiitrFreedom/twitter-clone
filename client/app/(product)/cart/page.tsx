@@ -22,7 +22,7 @@ function Cart() {
         })
 
     }
-    let { data: orders, isLoading, isFetching, isError, error, refetch } = trpc.order.getallcart.useQuery(undefined, { retry: 1, onError: queryError });
+    let { data: orders, isLoading, isFetching, isError, error, refetch } = trpc.order.getallcart.useQuery(undefined, { retry: 1, onError: queryError, staleTime: 0 });
     let mutation = trpc.order.delete.useMutation({
         onSuccess: (data) => {
             toast({

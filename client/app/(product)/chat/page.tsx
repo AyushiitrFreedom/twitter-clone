@@ -14,6 +14,7 @@ function Page() {
     const router = useRouter()
 
     const { toast } = useToast();
+    const [chat, setChat] = useState<messageType[]>([]);
     const queryError = (error: any) => {
         if (error?.message == "You must be logged in to do this") {
             router.push('/login');
@@ -25,18 +26,18 @@ function Page() {
         })
 
     }
-    let { data: allChats, isLoading, isFetching, isError, error } = trpc.message.getall.useQuery(undefined, { retry: 1, onError: queryError });
+    const querySuccess = (data: any) => {
+        setChat(data)
+    }
+    let { data: allChats, isLoading, isFetching, isError, error } = trpc.message.getall.useQuery(undefined, { retry: 1, onError: queryError, onSuccess: querySuccess });
     let { data: userId } = trpc.auth.getUserId.useQuery(undefined, { retry: 1 });
 
-    const i: messageType[] = allChats as messageType[]
-    console.log(i, "i")
-    const [chat, setChat] = useState(i ? i : []);
-    console.log(chat, "chat")
+
 
     useEffect(() => {
+
         socket.on('chat', (data: messageType) => {
-            if (data.sender_id || data.recipient_id === userId) {
-                console.log(userId, "user id")
+            if ((data.sender_id === userId || data.recipient_id === userId)) {
                 setChat([...chat, data])
             }
 
@@ -69,8 +70,7 @@ function Page() {
             <div className='flex  justify-center '>
                 <div className="flex flex-col items-start space-y-4  w-[40vw] h-[75vh] border-black-700 border-2 border-solid overflow-scroll bg-[url('https://i.pinimg.com/736x/64/80/8e/64808e7b6c992958ad9b3220cd6bae49.jpg')] rounded-3xl">
                     {chat.map((data) => (
-                        console.log(data.sender_id === userId, "sach batao"),
-                        <div className={`flex ${data.sender_id === userId ? 'self-start' : 'self-end'}`}>
+                        <div className={`flex ${data.sender_id === userId ? 'flex-row self-start' : 'flex-row-reverse  self-end'}`}>
                             <Avatar />
                             <div
                                 key={data.message_id}

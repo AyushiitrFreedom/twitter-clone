@@ -14,11 +14,22 @@ import { eq } from 'drizzle-orm';
 
 const IsUser = middleware(async (opts) => {
     let result: User[] = [];
+    let token = ' ';
+    // console.log(opts.ctx.req.headers. + "cookie") // undefined is being printed
+    let response = opts.ctx.req.headers.cookie as string
+    // Use a regular expression to extract the 'token' part
+    const match = response.match(/token=([^;]*)/);
 
+    // Check if the match was found
+    if (match && match.length > 1) {
+        token = match[1].substring(6);
+        console.log(token + 'this is the fucking token');
+    } else {
+        console.log("Token not found in the input string");
+    }
 
-    let token = opts.ctx.req.headers.authorization ? opts.ctx.req.headers.authorization.replace("Bearer", "") : undefined;
-    console.log(opts.ctx.req.headers.authorization + "ab maja aega n bidu")
-    if (token !== undefined) {
+    console.log(opts.ctx.req.headers.cookie + "ab maja aega n bidu")
+    if (token !== " ") {
 
         try {
             const verify = jsonwebtoken.verify(token as string, process.env.JWT_SECRET as string);
@@ -28,7 +39,7 @@ const IsUser = middleware(async (opts) => {
             }
 
         } catch (error) {
-            console.log('le tu bhi le ye error' + error)
+            console.log('le tu bhi le ye error' + error.message)
         }
     }
 

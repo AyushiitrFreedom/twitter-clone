@@ -15,6 +15,8 @@ import session from "express-session";
 const { Client } = pkg;
 import genFunc from 'connect-pg-simple';
 import passport from "passport";
+import { fail } from 'assert';
+import jwtMaker from './utils/func/jwtMaker';
 import('./middlewares/passport');
 
 const PostgresqlStore = genFunc(session);
@@ -63,18 +65,23 @@ app.use(session({
 app.use(passport.initialize())
 app.use(passport.session())
 app.use('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
-app.get('/auth/callback',
-    passport.authenticate('google', { failureRedirect: 'http://localhost:3000/register' }), function (req: express.Request, res) {
-        // Successful authentication, redirect or respond as needed
-        const user = req.user as any;
-        const session = req.session;
-        // console.log("session");
-        // console.log(session);
-        // console.log("user");
-        // console.log(user._json);
-        res.redirect('http://localhost:3000/');
-    });
 
+app.get('/auth/callback', passport.authenticate('google', {
+    failureRedirect: 'http://localhost:3000/register',
+    // failureFlash: true
+}),
+    function (req, res) {
+        // console.log(failureFlash, "failure flash")
+        const user = req.user as any;
+        console.log(user, "user")
+        console.log(req.session, "session")
+        const session = req.session;
+        const token = jwtMaker({ id: user.id });
+        res.cookie('token', "Bearer" + token)
+        res.redirect('http://localhost:3000/')
+
+    }
+);
 // Available Routes
 app.use("/", createExpressMiddleware({ router: appRouter, createContext: createContext }));
 // app.use("/api/notes", require("./routes/notes"));
