@@ -55,7 +55,7 @@ npm install
 
 ### Step 7: Create a PostgreSQL Database
 
-Follow the instructions in the provided video to create a PostgreSQL database , make user of name = srk , password = ddlj and database = amazon: [Database Setup Video](https://www.youtube.com/watch?v=0Il040ExA_Q)
+Follow the instructions in the provided video to create a PostgreSQL database , make user of name = srk , password = ddlj and database = amazon  [Database Setup Video](https://www.youtube.com/watch?v=0Il040ExA_Q)
 
 ### Step 8: Navigate Back to the Project Root Directory
 
