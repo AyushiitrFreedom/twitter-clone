@@ -1,4 +1,5 @@
 import { pgTable, text, integer, boolean } from 'drizzle-orm/pg-core';
+import { relations } from 'drizzle-orm';
 export const user = pgTable('buyers', {
     id: text('id').primaryKey().notNull(),
     email: text('email').notNull(),
@@ -22,7 +23,12 @@ export const order = pgTable('order', {
     buyer_id: text('buyer_id').references(() => user.id),
     is_bought: boolean('is_bought'),
 });
-// Messages Table
+export const orderRelations = relations(order, ({ one }) => ({
+    product: one(product, {
+        fields: [order.product_id],
+        references: [product.product_id],
+    }),
+})); // Messages Table
 export const message = pgTable('message', {
     message_id: text('message_id').primaryKey(),
     sender_id: text('sender_id').references(() => user.id),

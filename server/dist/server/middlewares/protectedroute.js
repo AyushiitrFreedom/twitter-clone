@@ -9,9 +9,21 @@ import { eq } from 'drizzle-orm';
 // });
 const IsUser = middleware(async (opts) => {
     let result = [];
-    let token = opts.ctx.req.headers.authorization ? opts.ctx.req.headers.authorization.replace("Bearer", "") : undefined;
-    if (token !== null) {
-        console.log('hi');
+    let token = ' ';
+    // console.log(opts.ctx.req.headers. + "cookie") // undefined is being printed
+    let response = opts.ctx.req.headers.cookie;
+    // Use a regular expression to extract the 'token' part
+    const match = response.match(/token=([^;]*)/);
+    // Check if the match was found
+    if (match && match.length > 1) {
+        token = match[1].substring(6);
+        console.log(token + 'this is the fucking token');
+    }
+    else {
+        console.log("Token not found in the input string");
+    }
+    console.log(opts.ctx.req.headers.cookie + "ab maja aega n bidu");
+    if (token !== " ") {
         try {
             const verify = jsonwebtoken.verify(token, process.env.JWT_SECRET);
             if (typeof verify !== 'string') {
@@ -19,7 +31,7 @@ const IsUser = middleware(async (opts) => {
             }
         }
         catch (error) {
-            console.log('le tu bhi le ye error' + error);
+            console.log('le tu bhi le ye error' + error.message);
         }
     }
     if (!opts.ctx.req.isAuthenticated() && !result[0]) {
@@ -29,8 +41,6 @@ const IsUser = middleware(async (opts) => {
             message: 'You must be logged in to do this',
         });
     }
-    console.log('hi');
-    console.log(result[0]);
     opts.ctx.req.user = result[0];
     return opts.next({
         ctx: {

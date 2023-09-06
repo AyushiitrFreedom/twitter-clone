@@ -1,12 +1,12 @@
 import { router } from "../trpc";
 import { authRouter } from './auth';
-import { homeRouter } from './home';
 import { productRouter } from './product';
 import { orderRouter } from './order';
+import { messageRouter } from './message';
 export const appRouter = router({
     auth: authRouter,
-    home: homeRouter,
     product: productRouter,
-    order: orderRouter
+    order: orderRouter,
+    message: messageRouter,
 });
 //# sourceMappingURL=index.js.map

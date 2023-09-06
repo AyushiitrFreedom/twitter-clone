@@ -21,7 +21,6 @@ export const productRouter = router({
             const newProduct = async (t) => {
                 return db.insert(product).values(t);
             };
-            console.log(opts);
             const newproduct = { name: opts.input.name, description: opts.input.description, price: opts.input.price, product_id: uuidv4(), seller_id: opts.ctx.user.id, imageUrl: opts.input.imageUrl };
             const result = await newProduct(newproduct);
             if (result) {
@@ -59,7 +58,7 @@ export const productRouter = router({
     getall: userProcedure.query(async (opts) => {
         try {
             const products = await db.select().from(product);
-            if (!products[0]) {
+            if (products === undefined) {
                 throw new TRPCClientError("No Products Found");
             }
             return products;

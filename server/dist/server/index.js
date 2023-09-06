@@ -1,5 +1,6 @@
 import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
+import * as schema from './db/schema/Schema';
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
@@ -12,6 +13,7 @@ import session from "express-session";
 const { Client } = pkg;
 import genFunc from 'connect-pg-simple';
 import passport from "passport";
+import jwtMaker from './utils/func/jwtMaker';
 import('./middlewares/passport');
 const PostgresqlStore = genFunc(session);
 const sessionStore = new PostgresqlStore({
@@ -29,17 +31,10 @@ const connectdb = async () => {
     await client.connect();
 };
 connectdb();
-export const db = drizzle(client);
+export const db = drizzle(client, { schema });
 // await migrate({ client }, './db');trpc
 const app = express();
-// app.use(function (req, res, next) {
-//     res.header("Access-Control-Allow-Origin", "http://localhost:3000");
-//     res.header("Access-Control-Allow-Methods", "*");
-//     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-//     next();
-// });
 app.use(cors({ origin: "http://localhost:3000", methods: ['GET', 'POST'], credentials: true }));
-// undefined
 app.use(express.json());
 dotenv.config();
 app.use(session({
@@ -52,20 +47,41 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 app.use('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
-app.get('/auth/callback', passport.authenticate('google', { failureRedirect: 'http://localhost:3000/register' }), function (req, res) {
-    // Successful authentication, redirect or respond as needed
+app.get('/auth/callback', passport.authenticate('google', {
+    failureRedirect: 'http://localhost:3000/register',
+    // failureFlash: true
+}), function (req, res) {
+    // console.log(failureFlash, "failure flash")
     const user = req.user;
+    console.log(user, "user");
+    console.log(req.session, "session");
     const session = req.session;
-    console.log("session");
-    console.log(session);
-    console.log("user");
-    console.log(user._json);
+    const token = jwtMaker({ id: user.id });
+    res.cookie('token', "Bearer" + token);
     res.redirect('http://localhost:3000/');
 });
 // Available Routes
 app.use("/", createExpressMiddleware({ router: appRouter, createContext: createContext }));
 // app.use("/api/notes", require("./routes/notes"));
+// Web Sockets Implementation 
+const server = require('http').createServer(app);
+const io = require('socket.io')(server, {
+    cors: {
+        origin: "*",
+    }
+});
+io.on('connection', (socket) => {
+    console.log("what is a socket", socket);
+    console.log("socket is active to be connected");
+    socket.on('chat', (payload) => {
+        console.log("what is a payload", payload);
+        io.emit('chat', payload);
+    });
+});
 app.listen(process.env.EXPRESS_PORT, () => {
     console.log(`Example app listening on port ${process.env.EXPRESS_PORT}`);
+});
+server.listen(5050, () => {
+    console.log("socket is active at port 5050");
 });
 //# sourceMappingURL=index.js.map
